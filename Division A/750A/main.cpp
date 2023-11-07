@@ -4,35 +4,28 @@
 
 using namespace std;
 
-bool isPrime(int n) {
-	for (int i = 2; i < n; i++) {
-		if (n % i == 0) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int n;
-	cin >> n;
+	int n, k;
+	cin >> n >> k;
 
-	int k, m = 1;
+	int res = 0;
+	int cur = 0;
 
-	while (true) {
-		k = (n * m) + 1;
+	int threshold = 240 - k;
 
-		if (isPrime(k)) {
+	for (int i = 1; i <= n; i++) {
+		cur += i * 5;
+
+		if (cur > threshold) {
 			break;
 		}
 
-		m++;
+		res++;
 	}
 
-	cout << m;
+	cout << res;
 }
