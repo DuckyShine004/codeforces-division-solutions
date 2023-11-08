@@ -17,6 +17,5 @@ int main() {
         s.insert(in);
     }
 
-
     cout << 4 - s.size();
 }
