@@ -1,6 +1,4 @@
 #include <iostream>
-#include <string>
-#include <math.h>
 
 using namespace std;
 
@@ -9,7 +7,7 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	double n;
+	long long n;
 	cin >> n;
 
 	cout << 25;
