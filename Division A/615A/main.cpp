@@ -13,8 +13,6 @@ int main() {
 
 	set<int> i_set;
 
-
-
 	for (int i = 0; i < n; i++) {
 		cin >> x;
 
