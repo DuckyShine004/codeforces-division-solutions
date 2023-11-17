@@ -16,15 +16,22 @@ void solve() {
 		cin >> a;
 	}
 
-	sort(A.begin(), A.end());
+	int k, l;
+	k = l = 0;
 
-	int res = INF;
-
-	for (int i = 1; i < n; i++) {
-		res = min(res, A[i] - A[i - 1]);
+	for (int i = 0; i < n; i++) {
+		if (i & 1) {
+			if (A[i] % 2 == 0) {
+				k++;
+			}
+		} else {
+			if (A[i] & 1) {
+				l++;
+			}
+		}
 	}
 
-	cout << res << endl;
+	cout << (k == l ? (k + l) / 2 : -1) << endl;
 }
 
 int main() {
