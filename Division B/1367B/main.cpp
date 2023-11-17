@@ -1,8 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
-
-#define INF 10000
 
 using namespace std;
 
