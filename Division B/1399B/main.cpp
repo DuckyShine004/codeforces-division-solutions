@@ -13,7 +13,7 @@ void solve() {
 	for (int &a : A) {
 		cin >> a;
 	}
-
+	
 	for (int &b : B) {
 		cin >> b;
 	}
