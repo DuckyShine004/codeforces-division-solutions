@@ -4,6 +4,7 @@ using namespace std;
 
 typedef long long ll;
 
+
 void solve(ll k, ll x) {
 	cout << (k > 1 ? x + (9 * (k - 1)) : x) << "\n";	
 }
