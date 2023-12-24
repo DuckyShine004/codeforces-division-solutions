@@ -1,29 +1,28 @@
+#include <cmath>
 #include <iostream>
-#include <string>
 
 using namespace std;
+
+const int INF = 1e9;
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int n, k;
-    string s;
-
+    int n, k, res;
     cin >> n;
 
-    for (int i = 0; i < n; i++) {
-        k = i % 6;
+    k = ceil(sqrt(n));
+    res = INF;
 
-        if (k == 0 || k == 1) {
-            s += 'a';
-        } else if (k == 2 || k == 3) {
-            s += 'b';
-        } else {
-            s += 'c';
+    for (int i = 1; i <= k; i++) {
+        for (int j = 1; j <= k; j++) {
+            if (i * j >= n) {
+                res = min(res, 2 * (i + j));
+            }
         }
     }
 
-    cout << s;
+    cout << res;
 }
