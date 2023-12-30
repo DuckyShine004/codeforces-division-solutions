@@ -21,7 +21,6 @@ int main() {
     res = pre = cur = 0;
 
     bool is_found = false;
-    ;
 
     for (int i = 0; i < n; i++) {
         if (!is_found) {
@@ -38,11 +37,7 @@ int main() {
                 continue;
             }
 
-            if (i - pre > 1) {
-                res += 2;
-            } else {
-                res++;
-            }
+            res += (i - pre > 1) ? 2 : 1;
         }
     }
 
