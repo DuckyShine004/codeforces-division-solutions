@@ -19,9 +19,6 @@ int main() {
 
     int j;
 
-    // open tag is true, closed tag is false
-    // Keep the same indent if previous was open and current is closed
-
     while (i < n) {
         j = i + 1;
         t = '<';
