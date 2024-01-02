@@ -25,7 +25,6 @@ using namespace std::chrono;
 #define bk back();
 #define all(a) (a).begin(), (a).end();
 #define fastio() (ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr), cerr.tie(nullptr));
-
 #define debug(...) fprintf(stderr, __VA_ARGS__), fflush(stderr)
 
 // clang-format off
@@ -33,7 +32,7 @@ using namespace std::chrono;
     for ( \
         auto blockTime = make_pair(chrono::high_resolution_clock::now(), true); \
         blockTime.second; \
-        debug("%s: %lld ms\n", d, chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - blockTime.first).count()), blockTime.second = false \
+        debug("%s: %ld ms\n", d, chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - blockTime.first).count()), blockTime.second = false \
     )
 // clang-format on
 
@@ -87,7 +86,16 @@ template <typename Ostream, typename Cont> typename enable_if<is_same<Ostream, o
 }
 template <typename Ostream, typename... Ts> Ostream &operator<<(Ostream &os, const pair<Ts...> &p) { return os << "{" << p.first << ", " << p.second << "}"; }
 
-void solve() {}
+void solve() {
+    int n;
+    cin >> n;
+
+    for (int i = 0; i < n; i++) {
+        cout << i << " ";
+    }
+
+    dbg(n);
+}
 
 int main() {
 #ifdef ONLINE_JUDGE
@@ -103,7 +111,7 @@ int main() {
 
 #ifdef DEBUG
     while (t--) {
-        time__("solve") { solve(); }
+        time__("Time") { solve(); }
     }
 #else
     while (t--) {
