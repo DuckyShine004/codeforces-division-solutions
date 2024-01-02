@@ -26,6 +26,17 @@ using namespace std::chrono;
 #define all(a) (a).begin(), (a).end();
 #define fastio() (ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr), cerr.tie(nullptr));
 
+#define debug(...) fprintf(stderr, __VA_ARGS__), fflush(stderr)
+
+// clang-format off
+#define time__(d) \
+    for ( \
+        auto blockTime = make_pair(chrono::high_resolution_clock::now(), true); \
+        blockTime.second; \
+        debug("%s: %lld ms\n", d, chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - blockTime.first).count()), blockTime.second = false \
+    )
+// clang-format on
+
 typedef long long ll;
 typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
@@ -90,7 +101,13 @@ int main() {
     int t = 1;
     // cin >> t;
 
+#ifdef DEBUG
+    while (t--) {
+        time__("solve") { solve(); }
+    }
+#else
     while (t--) {
         solve();
     }
+#endif
 }
