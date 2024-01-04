@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <chrono>
+#include <climits>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -56,6 +57,7 @@ typedef vector<pll> vpll;
 const int MAX_N = 1e5 + 5;
 const ll MOD = 1e9 + 7;
 const ll INF = 1e9;
+const ll INFLL = LLONG_MAX;
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
 
@@ -131,6 +133,17 @@ class UnionFind {
             }
         }
     }
+};
+
+struct vec2 {
+    int x;
+    int y;
+};
+
+struct vec3 {
+    int x;
+    int y;
+    int z;
 };
 
 void solve() {}
