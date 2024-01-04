@@ -149,13 +149,30 @@ struct pnt3 {
     int z;
 };
 
-void solve() {}
+void solve() {
+    ll n;
+    cin >> n;
+
+    ll k = max(0LL, n - 14) / 14;
+    ll m = 21 + (14 * k);
+
+    bool flag = false;
+
+    forinc(i, 1, 6) {
+        if (m - i == n) {
+            flag = true;
+            break;
+        }
+    }
+
+    cout << (flag ? "YES" : "NO") << "\n";
+}
 
 int main() {
     fastio();
 
-    int t = 1;
-    // cin >> t;
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {
