@@ -1,14 +1,10 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
-#include <cstdio>
-#include <cstring>
 #include <functional>
 #include <iostream>
 #include <map>
-#include <queue>
 #include <set>
-#include <stack>
 #include <string>
 #include <vector>
 
@@ -22,15 +18,12 @@ using namespace std::chrono;
 #define forinc(i, a, b) for (int i = a; i <= b; i++)
 #define fordec(i, a, b) for (int i = a; i >= b; i--)
 #define FOR(i, a, b) for (int i = a; i < b; i++)
-#define len(a) (a).length()
-#define sz(a) (a).size()
-#define vec1(type, n) vector<type>(n)
-#define vec2(type, n, m) vector<vector<type>>((n), vector<type>((m)))
+#define len(a) (a).length();
+#define sz(a) (a).size();
 #define lsh(a) (1 << (a));
-#define str(a) to_string(a)
-#define ft front()
-#define bk back()
-#define all(a) (a).begin(), (a).end()
+#define ft front();
+#define bk back();
+#define all(a) (a).begin(), (a).end();
 #define fastio() (ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr), cerr.tie(nullptr));
 #define debug(...) fprintf(stderr, __VA_ARGS__), fflush(stderr)
 
@@ -46,10 +39,8 @@ using namespace std::chrono;
 typedef long long ll;
 typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
-typedef vector<vector<int>> vvi;
 typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef vector<string> vs;
 typedef vector<pii> vpii;
 typedef vector<pll> vpll;
 
@@ -95,47 +86,19 @@ template <typename Ostream, typename Cont> typename enable_if<is_same<Ostream, o
 }
 template <typename Ostream, typename... Ts> Ostream &operator<<(Ostream &os, const pair<Ts...> &p) { return os << "{" << p.first << ", " << p.second << "}"; }
 
-class UnionFind {
-  public:
-    vi reps;
-    vi rank;
-
-    UnionFind(int n) : reps(n), rank(n, 0) {
-        FOR(i, 0, n) { reps[i] = i; }
-    }
-
-    int find(int x) {
-        while (x != reps[x]) {
-            reps[x] = reps[reps[x]];
-            x = reps[x];
-        }
-
-        return x;
-    }
-
-    void merge(int x, int y) {
-        x = find(x);
-        y = find(y);
-
-        if (x == y) {
-            return;
-        }
-
-        if (rank[x] > rank[y]) {
-            reps[y] = x;
-        } else {
-            reps[x] = y;
-
-            if (rank[x] == rank[y]) {
-                rank[y]++;
-            }
-        }
-    }
-};
-
-void solve() {}
+void solve() {
+    int n;
+    cin >> n;
+    cout << 1;
+}
 
 int main() {
+#ifdef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("error.txt", "w", stderr);
+    freopen("output.txt", "w", stdout);
+#endif
+
     fastio();
 
     int t = 1;
@@ -146,11 +109,6 @@ int main() {
         time__("Time") { solve(); }
     }
 #else
-#ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("error.txt", "w", stderr);
-    freopen("output.txt", "w", stdout);
-#endif
     while (t--) {
         solve();
     }
