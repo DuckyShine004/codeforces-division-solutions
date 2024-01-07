@@ -167,13 +167,59 @@ struct pnt3 {
     int z;
 };
 
-void solve() {}
+bool vis[200005];
+
+void solve() {
+    string s;
+    cin >> s;
+
+    int n = len(s);
+
+    int l = 0;
+    int r = n + 1;
+    int d;
+
+    function<bool(int)> dfs = [&](int i) -> bool {
+        if (i >= n + 1) {
+            return true;
+        }
+
+        if (i <= 0) {
+            return false;
+        }
+
+        if (vis[i]) {
+            return false;
+        }
+
+        vis[i] = true;
+
+        if (s[i - 1] == 'R') {
+            return dfs(i + d) | dfs(i + 1);
+        }
+
+        return dfs(i - d) | dfs(i - 1);
+    };
+
+    while (l < r) {
+        d = l + (r - l) / 2;
+        memset(vis, false, sizeof(vis));
+
+        if (dfs(d)) {
+            r = d;
+        } else {
+            l = d + 1;
+        }
+    }
+
+    cout << l << "\n";
+}
 
 int main() {
     fastio();
 
-    int t = 1;
-    // cin >> t;
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {
