@@ -118,6 +118,64 @@ template <typename T> void print_mat(const T mat, int n, int m) {
     }
 }
 
+template <typename T> int bs(const T &arr, int t) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l <= r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] == t) {
+            return k;
+        }
+
+        if (arr[k] < t) {
+            l = k + 1;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (arr[l] == t ? l : -1);
+}
+
+template <typename T> int bsl(const T &arr, int t) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] >= t) {
+            r = k;
+        } else {
+            l = k + 1;
+        }
+    }
+
+    return (arr[l] == t ? l : -1);
+}
+
+template <typename T> int bsr(const T &arr, int t) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l + 1) / 2;
+
+        if (arr[k] <= t) {
+            l = k;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (arr[l] == t ? l : -1);
+}
+
 class UnionFind {
   public:
     vi reps;
