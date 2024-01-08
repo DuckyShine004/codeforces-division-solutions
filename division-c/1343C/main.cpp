@@ -226,33 +226,46 @@ struct pnt3 {
 };
 
 void solve() {
-    ll n, k;
-    cin >> n >> k;
+    int n;
+    cin >> n;
 
-    ll d = ceil(static_cast<double>(k) / (n - 1));
+    vll A(n);
 
-    ll l = 0;
-    ll r = n * d;
-    ll m, x, y, z;
-
-    while (l <= r) {
-        m = l + (r - l) / 2;
-
-        x = m / n;
-        y = x * (n - 1);
-        z = x * n;
-
-        if (k >= y && k <= y + n - 1) {
-            cout << (k == y ? z - 1 : z + k - y) << "\n";
-            break;
-        }
-
-        if (y < k) {
-            l = m + 1;
-        } else {
-            r = m - 1;
-        }
+    for (ll &a : A) {
+        cin >> a;
     }
+
+    ll res = 0;
+    ll cur;
+
+    int i, j;
+    i = 0;
+
+    bool flag;
+
+    while (i < n) {
+        flag = A[i] > 0;
+        j = i;
+
+        cur = -INF;
+
+        if (flag) {
+            while (j < n && A[j] > 0) {
+                cur = max(cur, A[j]);
+                j++;
+            }
+        } else {
+            while (j < n && A[j] < 0) {
+                cur = max(cur, A[j]);
+                j++;
+            }
+        }
+
+        res += cur;
+        i = j;
+    }
+
+    cout << res << "\n";
 }
 
 int main() {
