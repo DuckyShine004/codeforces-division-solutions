@@ -225,7 +225,37 @@ struct pnt3 {
     int z;
 };
 
-void solve() {}
+bool tb[26];
+
+void solve() {
+    int n, k;
+    string s;
+
+    char c;
+
+    cin >> n >> k >> s;
+
+    FOR(i, 0, k) {
+        cin >> c;
+        tb[(int)c - 97] = true;
+    }
+
+    ll x, res;
+    x = res = 0;
+
+    FOR(i, 0, n) {
+        if (tb[(int)s[i] - 97]) {
+            x++;
+        }
+
+        if (!tb[(int)s[i] - 97] || i == n - 1) {
+            res += (x * (x + 1)) / 2;
+            x = 0;
+        }
+    }
+
+    cout << res;
+}
 
 int main() {
     fastio();
