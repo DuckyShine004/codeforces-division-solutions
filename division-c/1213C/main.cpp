@@ -20,9 +20,9 @@ using namespace std::chrono;
 #define s second
 #define ppb pop_back
 #define psb push_back
-#define forinc(i, a, b) for (int i = a; i <= b; i++)
-#define fordec(i, a, b) for (int i = a; i >= b; i--)
-#define FOR(i, a, b) for (int i = a; i < b; i++)
+#define forinc(i, a, b) for (auto i = a; i <= b; i++)
+#define fordec(i, a, b) for (auto i = a; i >= b; i--)
+#define FOR(i, a, b) for (auto i = a; i < b; i++)
 #define len(a) (a).length()
 #define sz(a) (a).size()
 #define vec1(type, n) vector<type>(n)
@@ -118,6 +118,64 @@ template <typename T> void print_mat(const T mat, int n, int m) {
     }
 }
 
+template <typename T> int bs(const T &arr, int t) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l <= r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] == t) {
+            return k;
+        }
+
+        if (arr[k] < t) {
+            l = k + 1;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (arr[l] == t ? l : -1);
+}
+
+template <typename T> int bsl(const T &arr, int t) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] >= t) {
+            r = k;
+        } else {
+            l = k + 1;
+        }
+    }
+
+    return (arr[l] == t ? l : -1);
+}
+
+template <typename T> int bsr(const T &arr, int t) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l + 1) / 2;
+
+        if (arr[k] <= t) {
+            l = k;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (arr[l] == t ? l : -1);
+}
+
 class UnionFind {
   public:
     vi reps;
@@ -167,52 +225,47 @@ struct pnt3 {
     int z;
 };
 
-bool vis[200005];
-
 void solve() {
-    string s;
-    cin >> s;
+    ll n, m;
+    cin >> n >> m;
 
-    int n = len(s);
+    ll res = 0;
 
-    int l = 0;
-    int r = n + 1;
-    int d;
+    map<int, pll> imap;
 
-    function<bool(int)> dfs = [&](int i) -> bool {
-        if (i >= n + 1) {
-            return true;
-        }
+    imap[1] = {45, 10};
+    imap[2] = {20, 5};
+    imap[3] = {45, 10};
+    imap[4] = {20, 5};
+    imap[5] = {5, 2};
+    imap[6] = {20, 5};
+    imap[7] = {45, 10};
+    imap[8] = {20, 5};
+    imap[9] = {45, 10};
 
-        if (i <= 0) {
-            return false;
-        }
+    ll k = m % 10;
 
-        if (vis[i]) {
-            return false;
-        }
-
-        vis[i] = true;
-
-        if (s[i - 1] == 'R') {
-            return dfs(i + d) | dfs(i + 1);
-        }
-
-        return dfs(i - d) | dfs(i - 1);
-    };
-
-    while (l < r) {
-        d = l + (r - l) / 2;
-        memset(vis, false, sizeof(vis));
-
-        if (dfs(d)) {
-            r = d;
-        } else {
-            l = d + 1;
-        }
+    if (k == 0) {
+        cout << 0 << "\n";
+        return;
     }
 
-    cout << l << "\n";
+    ll a, b, c, x, y, z;
+
+    a = imap[k].f;
+    b = imap[k].s;
+    x = b * m;
+    y = n / x;
+    z = x * y;
+
+    res += y * a;
+
+    n -= z;
+    c = n / m;
+
+    forinc(i, 1, c) { res += (i * m) % 10; }
+
+    cout << res << "\n";
 }
 
 int main() {
