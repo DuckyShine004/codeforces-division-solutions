@@ -20,9 +20,9 @@ using namespace std::chrono;
 #define s second
 #define ppb pop_back
 #define psb push_back
-#define forinc(i, a, b) for (auto i = a; i <= b; i++)
-#define fordec(i, a, b) for (auto i = a; i >= b; i--)
-#define FOR(i, a, b) for (auto i = a; i < b; i++)
+#define forinc(i, a, b) for (int i = a; i <= b; i++)
+#define fordec(i, a, b) for (int i = a; i >= b; i--)
+#define FOR(i, a, b) for (int i = a; i < b; i++)
 #define len(a) (a).length()
 #define sz(a) (a).size()
 #define vec1(type, n) vector<type>(n)
@@ -225,7 +225,33 @@ struct pnt3 {
     int z;
 };
 
-void solve() {}
+void solve() {
+    int n;
+    cin >> n;
+
+    vi A(n), B(n);
+
+    for (int &a : A) {
+        cin >> a;
+    }
+
+    sort(all(A));
+
+    int l = 0;
+    int r = n - 1;
+
+    FOR(i, 0, n) {
+        if (i & 1) {
+            B[r--] = A[i];
+        } else {
+            B[l++] = A[i];
+        }
+    }
+
+    for (int b : B) {
+        cout << b << " ";
+    }
+}
 
 int main() {
     fastio();
