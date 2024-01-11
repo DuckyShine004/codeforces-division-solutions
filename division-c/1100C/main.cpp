@@ -227,7 +227,22 @@ struct pnt3 {
     int z;
 };
 
-void solve() {}
+void solve() {
+    double n, r, R;
+    cin >> n >> r;
+
+    double a, b, c, theta;
+
+    theta = (2 * PI) / n;
+
+    a = 1 + cos(theta);
+    b = (2 * r) * (cos(theta) - 1);
+    c = pow(r, 2) * (cos(theta) - 1);
+
+    R = (-b + sqrt(pow(b, 2) - (4 * a * c))) / (2 * a);
+
+    cout << R;
+}
 
 int main() {
     fastio();
