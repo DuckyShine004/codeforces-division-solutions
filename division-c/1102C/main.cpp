@@ -34,8 +34,6 @@ using namespace std::chrono;
 #define ft front()
 #define bk back()
 #define all(a) (a).begin(), (a).end()
-#define println(n) cout << n << "\n";
-#define readin(...) (cin >> __VA_ARGS__)
 #define fastio() (ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr), cerr.tie(nullptr), cout << fixed, cout << setprecision(10));
 #define debug(...) fprintf(stderr, __VA_ARGS__), fflush(stderr)
 
@@ -61,7 +59,6 @@ typedef vector<string> vs;
 typedef vector<pii> vpii;
 typedef vector<pll> vpll;
 
-const string ln = "\n";
 const double PI = 3.14159265358979323846;
 const int MAX_N = 1e5 + 5;
 const ll MOD = 1e9 + 7;
@@ -70,16 +67,10 @@ const ll INFLL = LLONG_MAX;
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
 
-template <typename T> void readvec(vector<T> &vec) {
-    for (T &v : vec) {
-        cin >> v;
-    }
-}
-
-template <typename T> void printsln(const T &arr) {
-    for (auto it = arr.begin(); it != arr.end();) {
+template <typename T> void print_soln(const T &x) {
+    for (auto it = x.begin(); it != x.end();) {
         cout << *it;
-        if (++it != arr.end())
+        if (++it != x.end())
             cout << " ";
     }
 
@@ -237,7 +228,86 @@ struct pnt3 {
     int z;
 };
 
-void solve() {}
+bool tb[105];
+
+void solve() {
+    int n, x, y;
+    cin >> n >> x >> y;
+
+    vi A(n);
+
+    if (x > y) {
+        cout << n;
+        return;
+    }
+
+    for (int &a : A) {
+        cin >> a;
+    }
+
+    memset(tb, false, sizeof(tb));
+
+    int res = 0;
+    int t = 1;
+    int min, pos;
+
+    bool flag, found;
+    flag = found = true;
+
+    while (flag) {
+        pos = 0;
+        min = 1e6;
+        found = false;
+
+        if (t) {
+            found = false;
+
+            FOR(i, 0, n) {
+                if (A[i] == 0) {
+                    continue;
+                }
+
+                // Check if we can pick the current number
+                if (A[i] - x <= 0 && A[i] < min) {
+                    found = true;
+
+                    min = A[i];
+                    pos = i;
+                }
+            }
+
+            if (!found) {
+                flag = false;
+            } else {
+                A[pos] = 0;
+                res++;
+            }
+        } else {
+            FOR(i, 0, n) {
+                if (A[i] == 0) {
+                    continue;
+                }
+
+                if (A[i] < min) {
+                    found = true;
+
+                    min = A[i];
+                    pos = i;
+                }
+            }
+
+            if (!found) {
+                flag = false;
+            } else {
+                A[pos] += y;
+            }
+        }
+
+        t ^= 1;
+    }
+
+    cout << res;
+}
 
 int main() {
     fastio();
