@@ -246,28 +246,65 @@ struct pnt3 {
     int z;
 };
 
+int cols[2005][2005];
+int rows[2005][2005];
+
+bool is_valid(vs &arr, int x, int y, int m, int n) {
+    if (x < 0 || x >= m) {
+        return false;
+    }
+
+    if (y < 0 || y >= n) {
+        return false;
+    }
+
+    if (arr[y][x] == '*') {
+        return false;
+    }
+
+    return true;
+}
+
 void solve() {
-    int n, l, r;
-    cin >> n;
+    int n, m, k;
+    readin(n, m, k);
 
-    vll A(n);
-    readvec(A);
+    vs arr(n);
+    readvec(arr);
 
-    ll res, a, b;
-    res = l = 0;
-    r = n - 1;
+    ll res = 0;
 
-    a = A[l];
-    b = A[r];
+    memset(rows, 0, sizeof(rows));
+    memset(cols, 0, sizeof(cols));
 
-    while (l < r) {
-        if (a == b) {
-            res = max(res, a);
-            a += A[++l];
-        } else if (a < b) {
-            a += A[++l];
-        } else {
-            b += A[--r];
+    FOR(i, 0, n) {
+        FOR(j, 0, m) {
+            if (arr[i][j] == '*') {
+                continue;
+            }
+
+            if (k == 1) {
+                res++;
+                continue;
+            }
+
+            rows[i][j] = cols[i][j] = 1;
+
+            if (is_valid(arr, j, i - 1, m, n)) {
+                rows[i][j] = min(rows[i - 1][j] + 1, k);
+            }
+
+            if (is_valid(arr, j - 1, i, m, n)) {
+                cols[i][j] = min(cols[i][j - 1] + 1, k);
+            }
+
+            if (rows[i][j] >= k) {
+                res++;
+            }
+
+            if (cols[i][j] >= k) {
+                res++;
+            }
         }
     }
 
