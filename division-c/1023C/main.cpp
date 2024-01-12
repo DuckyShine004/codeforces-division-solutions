@@ -69,14 +69,14 @@ const ll INFLL = LLONG_MAX;
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
 
+template <typename... T> void readin(T &...args) {
+    ((cin >> args), ...);
+}
+
 template <typename T> void readvec(vector<T> &vec) {
     for (T &v : vec) {
         cin >> v;
     }
-}
-
-template <typename... T> void readin(T &...args) {
-    ((cin >> args), ...);
 }
 
 template <typename T> void printsln(const T &arr) {
@@ -246,7 +246,43 @@ struct pnt3 {
     int z;
 };
 
+bool tb[200005];
+
 void solve() {
+    int n, k, m;
+    string s, t;
+    stack<pair<char, int>> cs;
+
+    readin(n, k, s);
+    memset(tb, false, sizeof(tb));
+
+    m = 0;
+
+    FOR(i, 0, n) {
+        if (!cs.empty() && cs.top().f == '(' && s[i] == ')') {
+            tb[cs.top().s] = true;
+            tb[i] = true;
+
+            cs.pop();
+            m++;
+
+            if (m == (k / 2)) {
+                break;
+            }
+
+            continue;
+        }
+
+        cs.push({s[i], i});
+    }
+
+    FOR(i, 0, n) {
+        if (tb[i]) {
+            t += s[i];
+        }
+    }
+
+    cout << t;
 }
 
 int main() {

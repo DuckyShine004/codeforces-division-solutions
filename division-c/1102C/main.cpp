@@ -228,8 +228,6 @@ struct pnt3 {
     int z;
 };
 
-bool tb[105];
-
 void solve() {
     int n, x, y;
     cin >> n >> x >> y;
@@ -244,8 +242,6 @@ void solve() {
     for (int &a : A) {
         cin >> a;
     }
-
-    memset(tb, false, sizeof(tb));
 
     int res = 0;
     int t = 1;
