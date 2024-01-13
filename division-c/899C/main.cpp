@@ -22,7 +22,9 @@ using namespace std::chrono;
 #define s second
 #define ppb pop_back
 #define psb push_back
-#define fors(i, a, b) for (auto i = a; i < b; i++)
+#define forinc(i, a, b) for (auto i = a; i <= b; i++)
+#define fordec(i, a, b) for (auto i = a; i >= b; i--)
+#define FOR(i, a, b) for (auto i = a; i < b; i++)
 #define revs(i, a, b) for (auto i = a; i > b; i--)
 #define len(a) (a).length()
 #define sz(a) (a).size()
@@ -246,6 +248,29 @@ struct pnt3 {
 };
 
 void solve() {
+    ll a, b, n, k;
+    cin >> n;
+
+    k = (n * (n + 1)) / 2;
+
+    a = k / 2;
+    b = k - a;
+
+    vll A;
+    int cur = 0;
+
+    println(b - a);
+
+    revs(i, n, 0) {
+        if (a - i >= 0) {
+            A.psb(i);
+            cur++;
+            a -= i;
+        }
+    }
+
+    cout << cur << " ";
+    printsln(A);
 }
 
 int main() {
