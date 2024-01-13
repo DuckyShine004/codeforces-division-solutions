@@ -246,48 +246,51 @@ struct pnt3 {
     int z;
 };
 
-int tb[101];
+bool comparator(const tuple<int, int, int> &a, const tuple<int, int, int> &b) {
+    if (get<0>(a) == get<0>(b)) {
+        return get<1>(a) > get<1>(b);
+    }
+
+    return get<0>(a) > get<0>(b);
+}
 
 void solve() {
-    int n, q, t, k, d, a, b, out;
-    bool flag;
+    int n, m, a, b, c;
+    cin >> n;
 
-    readin(n, q);
-    memset(tb, 0, sizeof(tb));
+    map<int, int> imap;
 
-    fors(i, 0, q) {
-        vi cur;
-
-        readin(t, k, d);
-
-        out = a = b = 0;
-        flag = false;
-
-        while (a < k && b < n) {
-            if (tb[b] <= t) {
-                cur.psb(b);
-                a++;
-            }
-
-            if (a >= k) {
-                flag = true;
-            }
-
-            b++;
-        }
-
-        if (!flag) {
-            println(-1);
-            continue;
-        }
-
-        for (int el : cur) {
-            tb[el] = t + d;
-            out += ++el;
-        }
-
-        println(out);
+    fors(i, 0, n) {
+        cin >> a;
+        imap[a]++;
     }
+
+    cin >> m;
+
+    vi B(m), C(m);
+    vector<tuple<int, int, int>> X(m);
+
+    readarr(B);
+    readarr(C);
+
+    fors(i, 0, m) {
+        X[i] = make_tuple(0, 0, i);
+
+        b = B[i];
+        c = C[i];
+
+        if (imap.find(b) != imap.end()) {
+            get<0>(X[i]) = imap[b];
+        }
+
+        if (imap.find(c) != imap.end()) {
+            get<1>(X[i]) = imap[c];
+        }
+    }
+
+    sort(all(X), comparator);
+
+    cout << get<2>(X[0]) + 1;
 }
 
 int main() {
