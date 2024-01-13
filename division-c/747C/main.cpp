@@ -22,9 +22,7 @@ using namespace std::chrono;
 #define s second
 #define ppb pop_back
 #define psb push_back
-#define forinc(i, a, b) for (auto i = a; i <= b; i++)
-#define fordec(i, a, b) for (auto i = a; i >= b; i--)
-#define FOR(i, a, b) for (auto i = a; i < b; i++)
+#define fors(i, a, b) for (auto i = a; i < b; i++)
 #define revs(i, a, b) for (auto i = a; i > b; i--)
 #define len(a) (a).length()
 #define sz(a) (a).size()
@@ -35,6 +33,7 @@ using namespace std::chrono;
 #define ft front()
 #define bk back()
 #define all(a) (a).begin(), (a).end()
+#define print(n) cout << n << " ";
 #define println(n) cout << n << "\n";
 #define fastio() (ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr), cerr.tie(nullptr), cout << fixed, cout << setprecision(10));
 #define debug(...) fprintf(stderr, __VA_ARGS__), fflush(stderr)
@@ -70,8 +69,8 @@ const ll INFLL = LLONG_MAX;
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
 
-template <typename T> void readvec(vector<T> &vec) {
-    for (T &v : vec) {
+template <typename T> void readarr(vector<T> &arr) {
+    for (T &v : arr) {
         cin >> v;
     }
 }
@@ -129,8 +128,8 @@ template <typename T> void print_mat(const T &mat) {
 }
 
 template <typename T> void print_mat(const T mat, int n, int m) {
-    FOR(i, 0, n) {
-        FOR(j, 0, m) {
+    fors(i, 0, n) {
+        fors(j, 0, m) {
             cout << mat[i][j] << " ";
         }
 
@@ -202,7 +201,7 @@ class UnionFind {
     vi rank;
 
     UnionFind(int n) : reps(n), rank(n, 0) {
-        FOR(i, 0, n) {
+        fors(i, 0, n) {
             reps[i] = i;
         }
     }
@@ -247,30 +246,55 @@ struct pnt3 {
     int z;
 };
 
+int tb[101];
+
 void solve() {
-    ll a, b, n, k;
-    cin >> n;
+    int n, q, t, k, d, a, b, out;
+    bool flag;
 
-    k = (n * (n + 1)) / 2;
+    readin(n, q);
+    memset(tb, 0, sizeof(tb));
 
-    a = k / 2;
-    b = k - a;
+    fors(i, 0, q) {
+        vi cur;
 
-    vll A;
-    int cur = 0;
+        readin(t, k, d);
 
-    println(b - a);
+        out = a = b = 0;
+        flag = false;
 
-    revs(i, n, 0) {
-        if (a - i >= 0) {
-            A.psb(i);
-            cur++;
-            a -= i;
+        while (a < k && b < n) {
+            if (tb[b] <= t) {
+                cur.psb(b);
+                a++;
+            }
+
+            if (a >= k) {
+                flag = true;
+            }
+
+            b++;
         }
-    }
 
-    cout << cur << " ";
-    printarr(A);
+        /* fors(k, 0, n) { */
+        /*     cout << tb[k] << " "; */
+        /* } */
+
+        /* cout << "\n"; */
+        /* dbg(a); */
+
+        if (!flag) {
+            println(-1);
+            continue;
+        }
+
+        for (int el : cur) {
+            tb[el] = t + d;
+            out += ++el;
+        }
+
+        println(out);
+    }
 }
 
 int main() {

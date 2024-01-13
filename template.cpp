@@ -33,6 +33,7 @@ using namespace std::chrono;
 #define ft front()
 #define bk back()
 #define all(a) (a).begin(), (a).end()
+#define print(n) cout << n << " ";
 #define println(n) cout << n << "\n";
 #define fastio() (ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr), cerr.tie(nullptr), cout << fixed, cout << setprecision(10));
 #define debug(...) fprintf(stderr, __VA_ARGS__), fflush(stderr)
@@ -68,8 +69,8 @@ const ll INFLL = LLONG_MAX;
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
 
-template <typename T> void readvec(vector<T> &vec) {
-    for (T &v : vec) {
+template <typename T> void readarr(vector<T> &arr) {
+    for (T &v : arr) {
         cin >> v;
     }
 }
@@ -78,7 +79,7 @@ template <typename... T> void readin(T &...args) {
     ((cin >> args), ...);
 }
 
-template <typename T> void printsln(const T &arr) {
+template <typename T> void printarr(const T &arr) {
     for (auto it = arr.begin(); it != arr.end();) {
         cout << *it;
         if (++it != arr.end())
@@ -127,8 +128,8 @@ template <typename T> void print_mat(const T &mat) {
 }
 
 template <typename T> void print_mat(const T mat, int n, int m) {
-    FOR(i, 0, n) {
-        FOR(j, 0, m) {
+    fors(i, 0, n) {
+        fors(j, 0, m) {
             cout << mat[i][j] << " ";
         }
 
@@ -200,7 +201,7 @@ class UnionFind {
     vi rank;
 
     UnionFind(int n) : reps(n), rank(n, 0) {
-        FOR(i, 0, n) {
+        fors(i, 0, n) {
             reps[i] = i;
         }
     }
