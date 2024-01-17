@@ -137,7 +137,7 @@ template <typename T> void print_mat(const T mat, int n, int m) {
     }
 }
 
-template <typename T> int bs(const T &arr, int t, bool find = false) {
+template <typename T> int bs(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -156,10 +156,10 @@ template <typename T> int bs(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
-template <typename T> int bsl(const T &arr, int t, bool find = false) {
+template <typename T> int bsl(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -174,10 +174,10 @@ template <typename T> int bsl(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
-template <typename T> int bsr(const T &arr, int t, bool find = false) {
+template <typename T> int bsr(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -192,7 +192,7 @@ template <typename T> int bsr(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
 class UnionFind {
@@ -246,14 +246,34 @@ struct pnt3 {
     int z;
 };
 
+bool comp(const pii &a, const pii &b) {
+    if (a.f == b.f) {
+        return a.s < b.s;
+    }
+
+    return a.f < b.f;
+}
 void solve() {
+    const int n = 4;
+
+    int x, y;
+    vpii a(n);
+
+    fors(i, 0, n) {
+        readin(x, y);
+        a[i] = {x, y};
+    }
+
+    sort(all(a), comp);
+
+    println(static_cast<int>(pow(a[1].s - a[0].s, 2)));
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    // cin >> t;
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

@@ -137,7 +137,7 @@ template <typename T> void print_mat(const T mat, int n, int m) {
     }
 }
 
-template <typename T> int bs(const T &arr, int t, bool find = false) {
+template <typename T> int bs(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -156,10 +156,10 @@ template <typename T> int bs(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
-template <typename T> int bsl(const T &arr, int t, bool find = false) {
+template <typename T> int bsl(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -174,10 +174,10 @@ template <typename T> int bsl(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
-template <typename T> int bsr(const T &arr, int t, bool find = false) {
+template <typename T> int bsr(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -192,7 +192,7 @@ template <typename T> int bsr(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
 class UnionFind {
@@ -247,13 +247,57 @@ struct pnt3 {
 };
 
 void solve() {
+    int n, m, al, bl, ar, br;
+    readin(n, m);
+
+    ll ap, aq, bp, bq, res = 0;
+    vll a(n), b(m);
+
+    readarr(a);
+    readarr(b);
+
+    sort(all(a));
+    sort(all(b));
+
+    al = bl = 0;
+    ar = n - 1;
+    br = m - 1;
+
+    while (al <= ar) {
+        ap = abs(a[al] - b[bl]);
+        aq = abs(a[al] - b[br]);
+        bp = abs(a[ar] - b[bl]);
+        bq = abs(a[ar] - b[br]);
+
+        if (ap >= aq && ap >= bp && ap >= bp) {
+            res += ap;
+            al++;
+            bl++;
+        } else if (aq >= ap && aq >= bp && aq >= bq) {
+            res += aq;
+            al++;
+            br--;
+        } else if (bp >= ap && bp >= aq && bp >= bq) {
+            res += bp;
+            ar--;
+            bl++;
+        } else if (bq >= ap && bq >= aq && bq >= bp) {
+            res += bq;
+            ar--;
+            br++;
+        } else {
+            continue;
+        }
+    }
+
+    println(res);
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    // cin >> t;
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

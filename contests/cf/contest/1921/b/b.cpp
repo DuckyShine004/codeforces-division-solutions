@@ -137,7 +137,7 @@ template <typename T> void print_mat(const T mat, int n, int m) {
     }
 }
 
-template <typename T> int bs(const T &arr, int t, bool find = false) {
+template <typename T> int bs(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -156,10 +156,10 @@ template <typename T> int bs(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
-template <typename T> int bsl(const T &arr, int t, bool find = false) {
+template <typename T> int bsl(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -174,10 +174,10 @@ template <typename T> int bsl(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
-template <typename T> int bsr(const T &arr, int t, bool find = false) {
+template <typename T> int bsr(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -192,7 +192,7 @@ template <typename T> int bsr(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
 class UnionFind {
@@ -247,13 +247,40 @@ struct pnt3 {
 };
 
 void solve() {
+    int n;
+    string s, f;
+
+    readin(n, s, f);
+
+    int k, m, res;
+    res = k = m = 0;
+
+    fors(i, 0, n) {
+        // We need to move some letters or possibly create some in the string
+        if (f[i] == '1' && f[i] != s[i]) {
+            k++;
+        }
+
+        if (s[i] == '1' && s[i] != f[i]) {
+            m++;
+        }
+    }
+
+    // Move existing letters to position first
+    int d = min(k, m);
+
+    k -= d;
+    m -= d;
+    res += d;
+
+    println((m == 0 ? res + k : res + m));
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    // cin >> t;
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

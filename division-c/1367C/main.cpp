@@ -247,13 +247,51 @@ struct pnt3 {
 };
 
 void solve() {
+    int n, k;
+    string s;
+
+    readin(n, k, s);
+
+    int m = k + 1;
+    int res = 0, p = 0, c = -1, a, b;
+
+    fors(i, 0, n) {
+        if (s[i] == '1') {
+            if (c == -1) {
+                p = i;
+                c = i;
+                continue;
+            }
+
+            a = p + m;
+            b = i - m;
+
+            p = i;
+
+            if (a > b) {
+                continue;
+            } else {
+                res += ((b - a) / m) + 1;
+            }
+        }
+    }
+
+    if (c == -1) {
+        println(((n - 1) / m) + 1);
+        return;
+    }
+
+    res += c / m;
+    res += (n - 1 - p) / m;
+
+    println(res);
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    // cin >> t;
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

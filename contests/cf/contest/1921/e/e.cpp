@@ -137,7 +137,7 @@ template <typename T> void print_mat(const T mat, int n, int m) {
     }
 }
 
-template <typename T> int bs(const T &arr, int t, bool find = false) {
+template <typename T> int bs(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -156,10 +156,10 @@ template <typename T> int bs(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
-template <typename T> int bsl(const T &arr, int t, bool find = false) {
+template <typename T> int bsl(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -174,10 +174,10 @@ template <typename T> int bsl(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
-template <typename T> int bsr(const T &arr, int t, bool find = false) {
+template <typename T> int bsr(const T &arr, int t) {
     int l = 0;
     int r = sz(arr) - 1;
     int k;
@@ -192,7 +192,7 @@ template <typename T> int bsr(const T &arr, int t, bool find = false) {
         }
     }
 
-    return (find ? l : (arr[l] == t ? l : -1));
+    return (arr[l] == t ? l : -1);
 }
 
 class UnionFind {
