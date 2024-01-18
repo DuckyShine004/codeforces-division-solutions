@@ -66,7 +66,6 @@ const int MAX_N = 1e5 + 5;
 const ll MOD = 1e9 + 7;
 const ll INF = 1e9;
 const ll INFLL = LLONG_MAX;
-const pii d2[2] = {{-1, 0}, {1, 0}};
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
 
@@ -247,71 +246,58 @@ struct pnt3 {
     int z;
 };
 
+int tb[26];
+
 void solve() {
-    const int MAX = 1e9;
+    int n, a;
+    char key;
+    string s, t, p;
+    readin(s, t, p);
 
-    int n, sx, sy, x, y, dx, dy;
-    pii a;
-    readin(n, sx, sy);
+    n = (int)len(t);
+    a = 0;
 
-    map<pii, int> mp;
+    string res(n, ' ');
+    memset(tb, 0, sizeof(tb));
 
-    for (pii d : d4) {
-        dx = sx + d.f;
-        dy = sy + d.s;
-
-        if (dx >= 0 && dx <= MAX && dy >= 0 && dy <= MAX) {
-            mp[{dx, dy}] = 0;
-        }
+    fors(i, 0, (int)len(p)) {
+        tb[p[i] - 'a']++;
     }
 
     fors(i, 0, n) {
-        readin(x, y);
-
-        for (auto p : mp) {
-            a = p.f;
-
-            dx = a.f;
-            dy = a.s;
-
-            if (dx < sx && x <= dx) {
-                mp[a]++;
-            }
-
-            if (dx > sx && x >= dx) {
-                mp[a]++;
-            }
-
-            if (dy < sy && y <= dy) {
-                mp[a]++;
-            }
-
-            if (dy > sy && y >= dy) {
-                mp[a]++;
-            }
+        if (t[i] == s[a]) {
+            res[i] = s[a++];
         }
     }
 
-    int _mx = 0;
-    pii res;
-
-    for (auto p : mp) {
-        if (_mx < p.s) {
-            _mx = p.s;
-            res = p.f;
-        }
+    if (a != (int)len(s)) {
+        println("NO");
+        return;
     }
 
-    println(_mx);
-    print(res.f);
-    print(res.s);
+    fors(i, 0, n) {
+        if (res[i] == t[i]) {
+            continue;
+        }
+
+        key = t[i] - 'a';
+
+        if (tb[key] == 0) {
+            break;
+        }
+
+        res[i] = t[i];
+        tb[key]--;
+    }
+
+    cout << (res == t ? "YES" : "NO") << "\n";
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    // cin >> t;
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {
@@ -322,7 +308,7 @@ int main() {
 #else
 #ifndef ONLINE_JUDGE
     freopen("input.txt", "r", stdin);
-    freopen("error.xt", "w", stderr);
+    freopen("error.txt", "w", stderr);
     freopen("output.txt", "w", stdout);
 #endif
     while (t--) {
