@@ -113,7 +113,6 @@ template <typename Ostream, typename Cont> typename enable_if<is_same<Ostream, o
 
     return os << "]";
 }
-
 template <typename Ostream, typename... Ts> Ostream &operator<<(Ostream &os, const pair<Ts...> &p) {
     return os << "{" << p.first << ", " << p.second << "}";
 }
@@ -236,49 +235,31 @@ class UnionFind {
     }
 };
 
-class vec3 {
-  public:
-    double x, y, z;
-
-    vec3() : x(0), y(0), z(0) {
-    }
-    vec3(double dx, double dy, double dz = 0) : x(dx), y(dy), z(dz) {
-    }
-
-    vec3 operator-() const {
-        return vec3(-x, -y, -z);
-    }
-
-    double magnitude() const {
-        return sqrt(x * x + y * y + z * z);
-    }
+struct pnt2 {
+    int x;
+    int y;
 };
 
-inline vec3 operator-(const vec3 &a, const vec3 &b) {
-    return vec3(a.x - b.x, a.y - b.y, a.z - b.z);
-}
-
-inline vec3 cross(const vec3 &a, const vec3 &b) {
-    double dx = a.y * b.z - a.z * b.y;
-    double dy = a.z * b.x - a.x * b.z;
-    double dz = a.x * b.y - a.y * b.x;
-
-    return vec3(dx, dy, dz);
-}
-
-inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
-    return 0.5 * cross(b - a, c - a).magnitude();
-}
+struct pnt3 {
+    int x;
+    int y;
+    int z;
+};
 
 void solve() {
+    int x1, y1, x2, y2;
+    readin(x1, y1, x2, y2);
+
+    bool f = ((x1 > y1 && x2 > y2) || (y1 > x1 && y2 > x2));
+
+    cout << (f ? "YES" : "NO") << "\n";
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

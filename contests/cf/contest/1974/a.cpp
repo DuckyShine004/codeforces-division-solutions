@@ -271,14 +271,23 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
 }
 
 void solve() {
+    int x, y, u, v, w, rem;
+    readin(x, y);
+
+    u = ceil(y / 2.0);
+    v = 15 * u - 4 * y;
+    w = max(0, x - v);
+    rem = ceil(w / 15.0);
+
+    cout << u + rem << '\n';
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {
@@ -288,9 +297,9 @@ int main() {
     }
 #else
 #ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
+    freopen("cp.in", "r", stdin);
     freopen("error.txt", "w", stderr);
-    freopen("output.txt", "w", stdout);
+    freopen("cp.out", "w", stdout);
 #endif
     while (t--) {
         solve();

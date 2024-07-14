@@ -270,15 +270,113 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+const char chs[4] = {'N', 'S', 'E', 'W'};
+
+bool valid(string &s) {
+    int u, v;
+    map<char, int> mp;
+
+    for (char c : chs)
+        mp[c] = 0;
+
+    for (char c : s) {
+        ++mp[c];
+    }
+
+    // Check if each device can execute at least one instruction
+    if (mp['N'] == 1 && mp['S'] == 1 && mp['E'] == 0 && mp['W'] == 0)
+        return false;
+    if (mp['N'] == 0 && mp['S'] == 0 && mp['E'] == 1 && mp['W'] == 1)
+        return false;
+
+    u = min(mp['N'], mp['S']);
+    v = min(mp['E'], mp['W']);
+
+    for (int i = 0; i < 2; i++)
+        mp[chs[i]] -= u;
+    for (int i = 2; i < 4; i++)
+        mp[chs[i]] -= v;
+
+    for (char c : chs) {
+        if (mp[c] & 1)
+            return false;
+    }
+
+    return true;
+}
+
+const int maxn = 2e5 + 1;
+int vis[maxn];
+
 void solve() {
+    int n, k, u, v;
+    string s;
+    map<char, int> mp, H, R;
+    readin(n, s);
+    vector<char> arr(n, ' ');
+    memset(vis, 0, sizeof(vis));
+
+    // Check if it is even possible to construct string
+    if (!valid(s)) {
+        println("NO");
+        return;
+    }
+
+    for (char c : chs) {
+        mp[c] = H[c] = R[c] = 0;
+    }
+
+    for (char c : s)
+        ++mp[c];
+
+    if (mp['N'] == 1 && mp['S'] == 1 && mp['E'] == 1 && mp['W'] == 1) {
+        for (int i = 0; i < n; i++) {
+            arr[i] = (s[i] == 'N' || s[i] == 'S') ? 'H' : 'R';
+        }
+
+        println(string(all(arr)));
+        return;
+    }
+
+    u = min(mp['N'], mp['S']);
+    v = min(mp['E'], mp['W']);
+
+    // Construct string by first cancelling opposite directions
+    for (int i = 0; i < n; i++) {
+        if (mp['N'] != mp['S'] && (s[i] == 'N' || s[i] == 'S') && H[s[i]] < u) {
+            ++H[s[i]];
+            arr[i] = 'H';
+            vis[i] = 1;
+        }
+
+        if (mp['E'] != mp['W'] && (s[i] == 'E' || s[i] == 'W') && H[s[i]] < v) {
+            ++H[s[i]];
+            arr[i] = 'H';
+            vis[i] = 1;
+        }
+    }
+
+    for (char c : chs) {
+        R[c] = ceil((mp[c] - H[c]) / 2.0);
+    }
+
+    // Construct remaining string
+    for (int i = 0; i < n; i++) {
+        if (vis[i])
+            continue;
+        arr[i] = (R[s[i]] > 0) ? 'H' : 'R';
+        --R[s[i]];
+    }
+
+    println(string(all(arr)));
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

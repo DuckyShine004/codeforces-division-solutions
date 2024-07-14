@@ -270,15 +270,51 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+void dfs(int node, vector<int> &vis, vector<int> &adj, vector<int> &component) {
+    vis[node] = 1;
+    component.push_back(node);
+    int next = adj[node];
+    if (!vis[next])
+        dfs(next, vis, adj, component);
+}
+
 void solve() {
+    int n;
+    cin >> n;
+    vector<int> adj(n), vis(n, 0);
+    for (int i = 0; i < n; ++i) {
+        cin >> adj[i];
+        adj[i]--; // Convert to zero-based index
+    }
+
+    int min_round_dances = 0, max_round_dances = 0;
+    for (int i = 0; i < n; ++i) {
+        if (!vis[i]) {
+            vector<int> component;
+            dfs(i, vis, adj, component);
+
+            min_round_dances++; // Each component is a round dance
+
+            // Check for two-person loops
+            set<int> unique(component.begin(), component.end());
+            for (int person : unique) {
+                if (adj[adj[person]] == person) {
+                    max_round_dances++;
+                    break; // Only count one two-person loop per component
+                }
+            }
+        }
+    }
+
+    cout << min_round_dances << " " << max_round_dances << "\n";
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

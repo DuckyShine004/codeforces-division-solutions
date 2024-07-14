@@ -270,15 +270,62 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+int get_tuple(map<tuple<int, int, int>, int> &mp, tuple<int, int, int> &t1, tuple<int, int, int> &t2) {
+    int a, b;
+    a = b = 0;
+
+    if (mp.find(t1) == mp.end()) {
+        mp[t1];
+    }
+
+    a = mp[t1];
+
+    if (mp.find(t2) != mp.end()) {
+        b = mp[t2];
+    }
+
+    mp[t1]++;
+
+    return a - b;
+}
+
 void solve() {
+    int n, a, b, c;
+    cin >> n;
+    ll res = 0;
+    vi v(n);
+    readarr(v);
+    map<tuple<int, int, int>, int> mp;
+    tuple<int, int, int> t, t1, t2, t3;
+
+    for (int i = 0; i < n - 2; i++) {
+        a = v[i];
+        b = v[i + 1];
+        c = v[i + 2];
+
+        t = {a, b, c};
+        t1 = {0, b, c};
+        t2 = {a, 0, c};
+        t3 = {a, b, 0};
+
+        res += get_tuple(mp, t1, t) + get_tuple(mp, t2, t) + get_tuple(mp, t3, t);
+
+        if (mp.find(t) == mp.end()) {
+            mp[t] = 0;
+        }
+
+        mp[t]++;
+    }
+
+    println(res);
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

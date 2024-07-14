@@ -270,7 +270,24 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+int dp[101];
+
 void solve() {
+    freopen("ladder.in", "r", stdin);
+    int n;
+    cin >> n;
+    vi arr(n);
+    readarr(arr);
+    memset(dp, 0, sizeof(dp));
+    dp[0] = arr[0];
+    dp[1] = max(dp[0] + arr[1], arr[1]);
+
+    for (int i = 2; i < n; i++) {
+        dp[i] = max(dp[i - 1], dp[i - 2]) + arr[i];
+    }
+
+    cout << dp[n - 1];
+    freopen("ladder.out", "w", stdout);
 }
 
 int main() {

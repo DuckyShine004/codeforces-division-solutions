@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <chrono>
+#include <cinttypes>
 #include <climits>
 #include <cmath>
 #include <cstdio>
@@ -113,7 +114,6 @@ template <typename Ostream, typename Cont> typename enable_if<is_same<Ostream, o
 
     return os << "]";
 }
-
 template <typename Ostream, typename... Ts> Ostream &operator<<(Ostream &os, const pair<Ts...> &p) {
     return os << "{" << p.first << ", " << p.second << "}";
 }
@@ -236,49 +236,67 @@ class UnionFind {
     }
 };
 
-class vec3 {
-  public:
-    double x, y, z;
-
-    vec3() : x(0), y(0), z(0) {
-    }
-    vec3(double dx, double dy, double dz = 0) : x(dx), y(dy), z(dz) {
-    }
-
-    vec3 operator-() const {
-        return vec3(-x, -y, -z);
-    }
-
-    double magnitude() const {
-        return sqrt(x * x + y * y + z * z);
-    }
+struct pnt2 {
+    int x;
+    int y;
 };
 
-inline vec3 operator-(const vec3 &a, const vec3 &b) {
-    return vec3(a.x - b.x, a.y - b.y, a.z - b.z);
-}
+struct pnt3 {
+    int x;
+    int y;
+    int z;
+};
 
-inline vec3 cross(const vec3 &a, const vec3 &b) {
-    double dx = a.y * b.z - a.z * b.y;
-    double dy = a.z * b.x - a.x * b.z;
-    double dz = a.x * b.y - a.y * b.x;
+bool compare(const pair<int, char> &a, const pair<int, char> &b) {
+    if (a.s == b.s) {
+        return a.f < b.f;
+    }
 
-    return vec3(dx, dy, dz);
-}
-
-inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
-    return 0.5 * cross(b - a, c - a).magnitude();
+    return a.s > b.s;
 }
 
 void solve() {
-}
+    int n, m, x;
+    string s, c;
 
+    readin(n, m, s);
+
+    vector<int> u(m);
+
+    for (int i = 0; i < m; i++) {
+        cin >> x;
+        u[i] = --x;
+    }
+
+    cin >> c;
+
+    vector<char> v(all(c));
+    vector<char> res(all(s));
+    sort(all(u));
+    sort(all(v));
+
+    int l, r;
+    l = 0;
+    r = m - 1;
+
+    for (int i = 0; i < m - 1; i++) {
+        if (u[i] == u[i + 1]) {
+            res[u[i]] = v[r--];
+        } else {
+            res[u[i]] = v[l++];
+        }
+    }
+
+    res[u[m - 1]] = v[l];
+
+    cout << string(all(res)) << "\n";
+}
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

@@ -270,7 +270,36 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+const int maxs = 10001, maxn = 301;
+
+int dp[maxs], tb[maxn];
+
 void solve() {
+    int s, n;
+    readin(s, n);
+    memset(dp, -1, sizeof(dp));
+
+    dp[0] = 0;
+    int res = 0;
+
+    for (int i = 0; i < n; i++) {
+        cin >> tb[i];
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = s; j >= 0; j--) {
+            if (j - tb[i] >= 0 && dp[j - tb[i]] != -1) {
+                dp[j] = max(dp[j], dp[j - tb[i]] + tb[i]);
+                res = max(res, dp[j]);
+            }
+        }
+    }
+
+    /* for (int i = 0; i <= s; i++) { */
+    /*     cout << dp[i] << " "; */
+    /* } */
+
+    println(res);
 }
 
 int main() {

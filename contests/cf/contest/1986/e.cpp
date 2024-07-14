@@ -113,7 +113,6 @@ template <typename Ostream, typename Cont> typename enable_if<is_same<Ostream, o
 
     return os << "]";
 }
-
 template <typename Ostream, typename... Ts> Ostream &operator<<(Ostream &os, const pair<Ts...> &p) {
     return os << "{" << p.first << ", " << p.second << "}";
 }
@@ -236,49 +235,121 @@ class UnionFind {
     }
 };
 
-class vec3 {
-  public:
-    double x, y, z;
-
-    vec3() : x(0), y(0), z(0) {
-    }
-    vec3(double dx, double dy, double dz = 0) : x(dx), y(dy), z(dz) {
-    }
-
-    vec3 operator-() const {
-        return vec3(-x, -y, -z);
-    }
-
-    double magnitude() const {
-        return sqrt(x * x + y * y + z * z);
-    }
+struct pnt2 {
+    int x;
+    int y;
 };
 
-inline vec3 operator-(const vec3 &a, const vec3 &b) {
-    return vec3(a.x - b.x, a.y - b.y, a.z - b.z);
-}
-
-inline vec3 cross(const vec3 &a, const vec3 &b) {
-    double dx = a.y * b.z - a.z * b.y;
-    double dy = a.z * b.x - a.x * b.z;
-    double dz = a.x * b.y - a.y * b.x;
-
-    return vec3(dx, dy, dz);
-}
-
-inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
-    return 0.5 * cross(b - a, c - a).magnitude();
-}
+struct pnt3 {
+    int x;
+    int y;
+    int z;
+};
 
 void solve() {
+    int n, k;
+    readin(n, k);
+
+    vi arr(n);
+    readarr(arr);
+    sort(all(arr));
+
+    map<int, vi> d;
+
+    for (int x : arr) {
+        d[x % k].psb(x);
+    }
+
+    int res = 0, even, odd, length, diff;
+    int no_of_odds = 0;
+
+    for (auto &p : d) {
+        length = p.s.size();
+        even = 0;
+        odd = INT_MAX;
+
+        if (length & 1) {
+            ++no_of_odds;
+
+            if (!(n & 1) || (n & 1 && no_of_odds > 1)) {
+                println(-1);
+                return;
+            }
+
+            // Create prefix and suffix arrays
+            vi pre(length, 0), pre_pairs(length, 0), suf_pairs(length, 0);
+
+            for (int i = 1; i < length; i++) {
+                diff = p.s[i] - p.s[i - 1];
+                pre_pairs[i] = pre_pairs[i - 1];
+
+                if (i & 1) {
+                    pre_pairs[i] += diff;
+                }
+
+                pre[i] = pre[i - 1] + diff;
+            }
+
+            for (int i = length - 2; i >= 0; i--) {
+                diff = p.s[i + 1] - p.s[i];
+                suf_pairs[i] = suf_pairs[i + 1];
+
+                if (i & 1) {
+                    suf_pairs[i] += diff;
+                }
+            }
+
+            int sm;
+
+            // Removing the ith element
+            for (int i = 1; i < length - 1; i++) {
+                if (i & 1) {
+                    sm = pre[i + 1] - pre[i - 1];
+
+                    if (i > 1) {
+                        sm += pre_pairs[i - 2];
+                    }
+
+                    if (i < length - 2) {
+                        sm += suf_pairs[i + 2];
+                    }
+                } else {
+                    sm = pre_pairs[i - 1] + suf_pairs[i + 1];
+                }
+
+                odd = min(odd, sm);
+            }
+
+            // Removing the last element
+            odd = min(odd, pre_pairs[length - 1]);
+
+            // Removing the first element
+            odd = min(odd, suf_pairs[0]);
+
+            /* dbg(p.s); */
+            /* dbg(pre_pairs); */
+            /* dbg(suf_pairs); */
+            /* dbg(odd); */
+            res += odd / k;
+
+        } else {
+            for (int i = 1; i < length; i += 2) {
+                even += p.s[i] - p.s[i - 1];
+            }
+
+            res += even / k;
+        }
+    }
+
+    println(res);
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

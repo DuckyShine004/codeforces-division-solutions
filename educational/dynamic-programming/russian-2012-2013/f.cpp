@@ -270,15 +270,46 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+const int maxn = 120;
+const int dpn = 3e5 + 5;
+
+int k = 1;
+int tb[maxn], dp[dpn];
+
 void solve() {
+    int m;
+    cin >> m;
+
+    for (int i = 0; i <= m; i++) {
+        dp[i] = INF;
+    }
+
+    dp[0] = 0;
+
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j < maxn; j++) {
+            if (i + tb[j] <= m) {
+                dp[i + tb[j]] = min(dp[i + tb[j]], dp[i] + 1);
+            }
+        }
+    }
+
+    println(dp[m]);
 }
 
 int main() {
     fastio();
+    memset(tb, 0, sizeof(tb));
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    tb[0] = 1;
+
+    for (int i = 1; i < maxn; i++) {
+        tb[i] = tb[i - 1] + (((i + 1) * (i + 2)) / 2);
+    }
+
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

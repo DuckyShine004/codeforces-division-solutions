@@ -271,14 +271,44 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
 }
 
 void solve() {
+    int n;
+    string s;
+    char a, b;
+    readin(n, s);
+    vector<char> v, t(n, ' ');
+    set<char> st;
+    map<char, char> mp;
+
+    for (char c : s) {
+        if (st.find(c) == st.end()) {
+            v.push_back(c);
+            st.insert(c);
+        }
+    }
+
+    sort(all(v));
+    int sz = v.size();
+
+    for (int i = 0; i <= sz / 2; i++) {
+        a = v[i];
+        b = v[sz - i - 1];
+        mp[a] = b;
+        mp[b] = a;
+    }
+
+    for (int i = 0; i < n; i++) {
+        t[i] = mp[s[i]];
+    }
+
+    println(string(all(t)));
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {
@@ -288,9 +318,9 @@ int main() {
     }
 #else
 #ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
+    freopen("cp.in", "r", stdin);
     freopen("error.txt", "w", stderr);
-    freopen("output.txt", "w", stdout);
+    freopen("cp.out", "w", stdout);
 #endif
     while (t--) {
         solve();

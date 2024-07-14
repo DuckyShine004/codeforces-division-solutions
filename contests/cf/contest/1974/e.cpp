@@ -270,15 +270,37 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+int C[51], H[51], dp[51];
+
 void solve() {
+    int m;
+    ll x, cur, loc, res = 0;
+    readin(m, x);
+    memset(dp, 0, sizeof(dp));
+
+    for (int i = 0; i < m; i++)
+        readin(C[i], H[i]);
+
+    function<ll(int)> dp = [&](int i) -> ll {
+        if (i == m)
+            return 0;
+
+        ll cur = dp(i + 1) + x;
+        ll out = 0;
+
+        for (int j = i + 1; j < m; j++) {
+        }
+    };
+
+    println(res);
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

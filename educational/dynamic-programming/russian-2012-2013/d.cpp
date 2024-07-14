@@ -270,7 +270,40 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+const int n = 8;
+
+int dp[n][n], board[n][n];
+
 void solve() {
+    freopen("king2.in", "r", stdin);
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> board[i][j];
+            dp[i][j] = INF;
+        }
+    }
+
+    dp[n - 1][0] = 0;
+
+    for (int i = n - 1; i >= 0; i--) {
+        for (int j = 0; j < n; j++) {
+            if (i - 1 >= 0) {
+                dp[i - 1][j] = min(dp[i - 1][j], dp[i][j] + board[i - 1][j]);
+            }
+
+            if (i - 1 >= 0 && j + 1 < n) {
+                dp[i - 1][j + 1] = min(dp[i - 1][j + 1], dp[i][j] + board[i - 1][j + 1]);
+            }
+
+            if (j + 1 < n) {
+                dp[i][j + 1] = min(dp[i][j + 1], dp[i][j] + board[i][j + 1]);
+            }
+        }
+    }
+
+    cout << dp[0][n - 1];
+    freopen("king2.out", "w", stdout);
 }
 
 int main() {

@@ -113,7 +113,6 @@ template <typename Ostream, typename Cont> typename enable_if<is_same<Ostream, o
 
     return os << "]";
 }
-
 template <typename Ostream, typename... Ts> Ostream &operator<<(Ostream &os, const pair<Ts...> &p) {
     return os << "{" << p.first << ", " << p.second << "}";
 }
@@ -236,49 +235,94 @@ class UnionFind {
     }
 };
 
-class vec3 {
-  public:
-    double x, y, z;
-
-    vec3() : x(0), y(0), z(0) {
-    }
-    vec3(double dx, double dy, double dz = 0) : x(dx), y(dy), z(dz) {
-    }
-
-    vec3 operator-() const {
-        return vec3(-x, -y, -z);
-    }
-
-    double magnitude() const {
-        return sqrt(x * x + y * y + z * z);
-    }
+struct pnt2 {
+    int x;
+    int y;
 };
 
-inline vec3 operator-(const vec3 &a, const vec3 &b) {
-    return vec3(a.x - b.x, a.y - b.y, a.z - b.z);
-}
+struct pnt3 {
+    int x;
+    int y;
+    int z;
+};
 
-inline vec3 cross(const vec3 &a, const vec3 &b) {
-    double dx = a.y * b.z - a.z * b.y;
-    double dy = a.z * b.x - a.x * b.z;
-    double dz = a.x * b.y - a.y * b.x;
+const int N = 21;
+int dp[2][N];
 
-    return vec3(dx, dy, dz);
-}
-
-inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
-    return 0.5 * cross(b - a, c - a).magnitude();
+int64_t get_num(string &s, int64_t a, int64_t b) {
+    return stoi(s.substr(a, b));
 }
 
 void solve() {
+    int n;
+    string s;
+
+    readin(n, s);
+
+    if (n <= 2) {
+        cout << s << '\n';
+        return;
+    }
+
+    int64_t cur, res = INT_MAX;
+    int64_t ra, rm, la, lm, x;
+
+    for (int i = 0; i < n - 2; i++) {
+        cur = get_num(s, i, 2);
+        rm = lm = 1;
+        ra = la = 0;
+
+        for (int j = i + 2; j < n; j++) {
+            x = get_num(s, j, 1);
+            rm *= x;
+            ra += x;
+        }
+
+        for (int j = 0; j < i; j++) {
+            x = get_num(s, j, 1);
+            lm *= x;
+            la += x;
+        }
+
+        dbg(lm);
+        dbg(rm);
+
+        res = min({res, cur * (lm + rm), la + cur * rm, lm * cur + ra});
+    }
+
+    cout << res << '\n';
 }
+
+/* void solve() { */
+/*     int n; */
+/*     string s; */
+/*     readin(n, s); */
+/*     memset(dp, 0, sizeof(dp)); */
+
+/*     dp[0][0] = dp[1][0] = get_num(s, 0, 1); */
+/*     dp[0][1] = dp[1][1] = get_num(s, 0, 2); */
+
+/*     dbg(s); */
+/*     dbg(get_num(s, 0, 1)); */
+
+/*     int a, b; */
+
+/*     /1* There are two cases, dp[0][i] denotes adding, dp[1][i] denotes multiplying *1/ */
+/*     for (int i = 2; i < n; i++) { */
+/*         a = get_num(s, i - 1, 2); */
+/*         b = get_num(s, i, ); */
+/*         dp[0][i] = max(dp[0][i - 2]) */
+/*     } */
+
+/*     println(max(dp[0][n - 1], dp[1][n - 1])); */
+/* } */
 
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

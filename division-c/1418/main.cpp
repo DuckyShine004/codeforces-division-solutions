@@ -2,6 +2,7 @@
 #include <chrono>
 #include <climits>
 #include <cmath>
+#include <csignal>
 #include <cstdio>
 #include <cstring>
 #include <deque>
@@ -270,15 +271,58 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+const int maxn = 2e5 + 1;
+
+int memo[maxn][2];
+
+int get_bosses(vi &a, int i, int n) {
+    int res = 0;
+
+    for (int j = i; j < min(i + 2, n); j++) {
+        if (a[j] == 1) {
+            ++res;
+        }
+    }
+
+    return res;
+}
+
 void solve() {
+    int n;
+    cin >> n;
+
+    vi a(n);
+    readarr(a);
+    memset(memo, -1, sizeof(memo));
+
+    function<int(int, int)> dp = [&](int i, int j) -> int {
+        if (i >= n) {
+            return 0;
+        }
+
+        if (memo[i][j] != -1) {
+            return memo[i][j];
+        }
+
+        // We can either kill one or two bosses, 0 is friend, 1 is me
+        if (j) {
+            memo[i][j] = min(dp(i + 1, 0), dp(i + 2, 0));
+        } else {
+            memo[i][j] = min(dp(i + 1, 1) + ((a[i] == 0) ? 0 : 1), dp(i + 2, 1) + get_bosses(a, i, n));
+        }
+
+        return memo[i][j];
+    };
+
+    println(dp(0, 0));
 }
 
 int main() {
     fastio();
 
-    int t = 1;
-    /* int t; */
-    /* cin >> t; */
+    /* int t = 1; */
+    int t;
+    cin >> t;
 
 #ifdef DEBUG
     while (t--) {

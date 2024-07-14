@@ -270,7 +270,34 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+int dp[1001];
+const int tb[3] = {1, 3, 5};
+
 void solve() {
+    freopen("lepus.in", "r", stdin);
+    int n;
+    string s;
+    readin(n, s);
+    memset(dp, -1, sizeof(dp));
+    dp[0] = 0;
+
+    for (int i = 1; i < n; i++) {
+        if (s[i] == 'w') {
+            continue;
+        }
+
+        int out = -1;
+
+        for (int x : tb) {
+            if (i - x >= 0 && dp[i - x] != -1) {
+                out = max(out, dp[i - x] + ((s[i] == '"') ? 1 : 0));
+            }
+        }
+
+        dp[i] = out;
+    }
+    freopen("lepus.out", "w", stdout);
+    cout << dp[n - 1];
 }
 
 int main() {

@@ -270,7 +270,37 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
+int memo[22][3];
+
 void solve() {
+    int n;
+    cin >> n;
+
+    memset(memo, -1, sizeof(memo));
+
+    function<int(int, int)> dp = [&](int i, int j) -> int {
+        if (i == n) {
+            return 1;
+        }
+
+        if (memo[i][j] != -1) {
+            return memo[i][j];
+        }
+
+        // Default to skipping letter b
+        int out = dp(i + 1, 0) + dp(i + 1, 2);
+
+        // Only times we don't skip b
+        if (i == 0 || j > 0) {
+            out += dp(i + 1, 1);
+        }
+
+        memo[i][j] = out;
+
+        return out;
+    };
+
+    cout << dp(0, 0);
 }
 
 int main() {
