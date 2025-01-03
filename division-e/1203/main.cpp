@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <cctype>
 #include <climits>
 #include <cmath>
 #include <cstdio>
@@ -56,6 +55,9 @@ typedef vector<pll> vpll;
 
 const string ln = "\n";
 const double PI = 3.14159265358979323846;
+const int MAX_N = 1e5 + 5;
+const ll MOD = 1e9 + 7;
+const ll INF = 1e9;
 const ll INFLL = LLONG_MAX;
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
@@ -78,11 +80,65 @@ template <typename T> bool in(const set<T> &s, T t) {
     return s.find(t) != s.end();
 }
 
-template <typename T> T sum(const vector<T> &v) {
-    return accumulate(all(v), T(0));
+template <typename T> int bs(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l <= r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] == t) {
+            return k;
+        }
+
+        if (arr[k] < t) {
+            l = k + 1;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
 }
 
-// Simple 1D range query segment tree inc range [a,b]
+template <typename T> int bsl(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] >= t) {
+            r = k;
+        } else {
+            l = k + 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsr(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l + 1) / 2;
+
+        if (arr[k] <= t) {
+            l = k;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+// Simple 1D range query segment tree
 struct SegmentTree {
     vi st;
 
@@ -255,22 +311,34 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-int ord(char &c) {
-    int x = int(c);
-    if (!isalpha(c))
-        return x - 48;
-    return islower(c) ? x - 97 : x - 65;
-}
-
 void solve() {
+    int n;
+    cin >> n;
+    vi v(n);
+    readarr(v);
+    set<int> st;
+    const int X = 150001;
+    sort(all(v));
+    fors(i, 0, n) {
+        int a, b, x = v[i];
+        a = x - 1;
+        b = x + 1;
+        if (a > 0 && !in(st, a))
+            st.insert(a);
+        else if (!in(st, x))
+            st.insert(x);
+        else if (b <= X && !in(st, b))
+            st.insert(b);
+    }
+    print(st.size());
 }
 
 int main() {
     fastio();
 
-    /* int t = 1; */
-    int t;
-    cin >> t;
+    int t = 1;
+    /* int t; */
+    /* cin >> t; */
 
 #ifdef DEBUG
     while (t--) {

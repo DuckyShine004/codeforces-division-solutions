@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <cctype>
 #include <climits>
 #include <cmath>
 #include <cstdio>
@@ -56,6 +55,7 @@ typedef vector<pll> vpll;
 
 const string ln = "\n";
 const double PI = 3.14159265358979323846;
+const int MAX_N = 1e5 + 5;
 const ll INFLL = LLONG_MAX;
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
@@ -82,7 +82,65 @@ template <typename T> T sum(const vector<T> &v) {
     return accumulate(all(v), T(0));
 }
 
-// Simple 1D range query segment tree inc range [a,b]
+template <typename T> int bs(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l <= r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] == t) {
+            return k;
+        }
+
+        if (arr[k] < t) {
+            l = k + 1;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsl(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] >= t) {
+            r = k;
+        } else {
+            l = k + 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsr(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l + 1) / 2;
+
+        if (arr[k] <= t) {
+            l = k;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+// Simple 1D range query segment tree
 struct SegmentTree {
     vi st;
 
@@ -254,15 +312,30 @@ inline vec3 cross(const vec3 &a, const vec3 &b) {
 inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
-
-int ord(char &c) {
-    int x = int(c);
-    if (!isalpha(c))
-        return x - 48;
-    return islower(c) ? x - 97 : x - 65;
-}
-
+const int INF = 2e5 + 1;
 void solve() {
+    int n;
+    cin >> n;
+    vi v(n);
+    readarr(v);
+    if (n <= 2) {
+        println(0);
+        return;
+    }
+    int x = INF, y = INF, res = 0;
+    for (int i = 0; i < n; i++) {
+        if (x > y)
+            swap(x, y);
+        if (v[i] <= x) {
+            x = v[i];
+        } else if (v[i] > y) {
+            x = v[i];
+            ++res;
+        } else {
+            y = v[i];
+        }
+    }
+    println(res);
 }
 
 int main() {

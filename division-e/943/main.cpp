@@ -82,6 +82,64 @@ template <typename T> T sum(const vector<T> &v) {
     return accumulate(all(v), T(0));
 }
 
+template <typename T> int bs(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l <= r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] == t) {
+            return k;
+        }
+
+        if (arr[k] < t) {
+            l = k + 1;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsl(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] >= t) {
+            r = k;
+        } else {
+            l = k + 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsr(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l + 1) / 2;
+
+        if (arr[k] <= t) {
+            l = k;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
 // Simple 1D range query segment tree inc range [a,b]
 struct SegmentTree {
     vi st;
@@ -261,8 +319,38 @@ int ord(char &c) {
         return x - 48;
     return islower(c) ? x - 97 : x - 65;
 }
-
+void pr(const vpii &res) {
+    for (auto &[y, x] : res)
+        cout << x + 1 << ' ' << y + 1 << "\n";
+}
 void solve() {
+    int n;
+    cin >> n;
+    vpii res(2);
+    res[0] = {0, 0};
+    res[1] = {1, 0};
+    if (n <= 2) {
+        pr(res);
+        return;
+    }
+    int dx = (n > 3) ? (n + 1) / 2 : 1;
+    int dy = (n > 3) ? (n - 3) / 2 : 0;
+    for (int i = n - 1; i >= 0; i -= 2) {
+        if (dx == 0)
+            break;
+        res.psb({n - 1, i});
+        --dx;
+    }
+    if (n & 1)
+        --dy;
+    for (int i = (n & 1) == 1 ? n - 3 : n - 2; i >= 1; i -= 2) {
+        if (dy == 0)
+            break;
+        res.psb({i, 0});
+        --dy;
+    }
+    /* debug(n, n & 1, res); */
+    pr(res);
 }
 
 int main() {

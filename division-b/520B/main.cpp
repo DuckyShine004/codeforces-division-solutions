@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <cctype>
+#include <chrono>
 #include <climits>
 #include <cmath>
 #include <cstdio>
@@ -13,14 +13,10 @@
 #include <set>
 #include <stack>
 #include <string>
-#include <utility>
 #include <vector>
 
-#ifndef ONLINE_JUDGE
-#include "Debug.h"
-#endif
-
 using namespace std;
+using namespace std::chrono;
 
 #define f first
 #define s second
@@ -40,6 +36,16 @@ using namespace std;
 #define print(n) cout << n << " ";
 #define println(n) cout << n << "\n";
 #define fastio() (ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr), cerr.tie(nullptr), cout << fixed, cout << setprecision(10));
+#define debug(...) fprintf(stderr, __VA_ARGS__), fflush(stderr)
+
+// clang-format off
+#define time__(d) \
+    for ( \
+        auto blockTime = make_pair(chrono::high_resolution_clock::now(), true); \
+        blockTime.second; \
+        debug("%s: %ld ms\n", d, chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - blockTime.first).count()), blockTime.second = false \
+    )
+// clang-format on
 
 typedef long long ll;
 typedef unsigned long long ull;
@@ -56,6 +62,9 @@ typedef vector<pll> vpll;
 
 const string ln = "\n";
 const double PI = 3.14159265358979323846;
+const int MAX_N = 1e5 + 5;
+const ll MOD = 1e9 + 7;
+const ll INF = 1e9;
 const ll INFLL = LLONG_MAX;
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
@@ -70,71 +79,125 @@ template <typename... T> void readin(T &...args) {
     ((cin >> args), ...);
 }
 
+template <typename T> void printarr(const T &arr) {
+    for (auto it = arr.begin(); it != arr.end();) {
+        cout << *it;
+        if (++it != arr.end())
+            cout << " ";
+    }
+
+    cout << "\n";
+}
+
 template <typename T> T gcd(T a, T b) {
-    return (b == 0) ? a : gcd(b, a % b);
+    if (b == 0)
+        return a;
+
+    return gcd(b, a % b);
 }
 
-template <typename T> bool in(const set<T> &s, T t) {
-    return s.find(t) != s.end();
+int recur_depth = 0;
+
+// clang-format off
+#ifdef DEBUG
+#define dbg(x) {++recur_depth; auto x_=x; --recur_depth; cerr<<string(recur_depth, '\t')<<"\e[91m"<<__func__<<":"<<__LINE__<<"\t"<<#x<<" = "<<x_<<"\e[39m"<<endl;}
+// clang-format on
+#else
+#define dbg(x)
+#endif
+template <typename Ostream, typename Cont> typename enable_if<is_same<Ostream, ostream>::value, Ostream &>::type operator<<(Ostream &os, const Cont &v) {
+    os << "[";
+    for (auto &x : v) {
+        os << x << ", ";
+    }
+
+    return os << "]";
 }
 
-template <typename T> T sum(const vector<T> &v) {
-    return accumulate(all(v), T(0));
+template <typename Ostream, typename... Ts> Ostream &operator<<(Ostream &os, const pair<Ts...> &p) {
+    return os << "{" << p.first << ", " << p.second << "}";
 }
 
-// Simple 1D range query segment tree inc range [a,b]
-struct SegmentTree {
-    vi st;
+template <typename T> void print_mat(const T &mat) {
+    for (const auto &row : mat) {
+        for (const auto &elem : row) {
+            cout << elem << " ";
+        }
 
-    SegmentTree(const vector<int> &a, int n) {
-        st.resize(4 * n);
+        cout << "\n";
+    }
+}
 
-        for (int i = 0; i < n; i++)
-            st[n + i] = a[i];
+template <typename T> void print_mat(const T mat, int n, int m) {
+    fors(i, 0, n) {
+        fors(j, 0, m) {
+            cout << mat[i][j] << " ";
+        }
 
-        for (int i = n - 1; i >= 1; i--) {
-            st[i] += st[i << 1];
-            st[i] += st[i << 1 | 1];
+        cout << "\n";
+    }
+}
+
+template <typename T> int bs(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l <= r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] == t) {
+            return k;
+        }
+
+        if (arr[k] < t) {
+            l = k + 1;
+        } else {
+            r = k - 1;
         }
     }
 
-    void update(int p, int v, int n) {
-        p += n;
+    return (find ? l : (arr[l] == t ? l : -1));
+}
 
-        st[p] = v;
+template <typename T> int bsl(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
 
-        while (p > 1) {
-            p >>= 1;
+    while (l < r) {
+        k = l + (r - l) / 2;
 
-            st[p] += st[p << 1];
-            st[p] += st[p << 1 | 1];
+        if (arr[k] >= t) {
+            r = k;
+        } else {
+            l = k + 1;
         }
     }
 
-    int query(int l, int r, int n) {
-        l += n;
-        r += n;
+    return (find ? l : (arr[l] == t ? l : -1));
+}
 
-        int res = 0;
+template <typename T> int bsr(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
 
-        while (l <= r) {
-            if ((l & 1) == 1) {
-                res += st[l++];
-            }
+    while (l < r) {
+        k = l + (r - l + 1) / 2;
 
-            if ((r & 1) == 0) {
-                res += st[r--];
-            }
-
-            l >>= 1;
-            r >>= 1;
+        if (arr[k] <= t) {
+            l = k;
+        } else {
+            r = k - 1;
         }
-
-        return res;
     }
-};
 
-struct UnionFind {
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+class UnionFind {
+  public:
     vi reps;
     vi rank;
 
@@ -173,12 +236,12 @@ struct UnionFind {
     }
 };
 
-struct vec3 {
+class vec3 {
+  public:
     double x, y, z;
 
     vec3() : x(0), y(0), z(0) {
     }
-
     vec3(double dx, double dy, double dz = 0) : x(dx), y(dy), z(dz) {
     }
 
@@ -189,58 +252,10 @@ struct vec3 {
     double magnitude() const {
         return sqrt(x * x + y * y + z * z);
     }
-
-    vec3 &operator-=(const vec3 &other) {
-        x -= other.x;
-        y -= other.y;
-        z -= other.z;
-
-        return *this;
-    }
-
-    vec3 &operator+=(const vec3 &other) {
-        x += other.x;
-        y += other.y;
-        z += other.z;
-
-        return *this;
-    }
-
-    vec3 &operator*=(double t) {
-        x *= t;
-        y *= t;
-        z *= t;
-
-        return *this;
-    }
-
-    vec3 &operator/=(double t) {
-        x /= t;
-        y /= t;
-        z /= t;
-
-        return *this;
-    }
 };
 
 inline vec3 operator-(const vec3 &a, const vec3 &b) {
     return vec3(a.x - b.x, a.y - b.y, a.z - b.z);
-}
-
-inline vec3 operator+(const vec3 &a, const vec3 &b) {
-    return vec3(a.x + b.x, a.y + b.y, a.z + b.z);
-}
-
-inline vec3 operator*(const vec3 &a, double t) {
-    return vec3(a.x * t, a.y * t, a.z * t);
-}
-
-inline vec3 operator*(const double t, const vec3 &a) {
-    return a * t;
-}
-
-inline vec3 operator/(const vec3 &a, double t) {
-    return vec3(a.x / t, a.y / t, a.z / t);
 }
 
 inline vec3 cross(const vec3 &a, const vec3 &b) {
@@ -255,22 +270,32 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-int ord(char &c) {
-    int x = int(c);
-    if (!isalpha(c))
-        return x - 48;
-    return islower(c) ? x - 97 : x - 65;
-}
-
 void solve() {
+    int n, m, res = 1e4 + 1;
+    readin(n, m);
+    if (n >= m) {
+        cout << n - m;
+        return;
+    }
+    for (int i = 1; i <= n; i++) {
+        int x = 1;
+        int k = 0;
+        while (i * x < m) {
+            x *= 2;
+            ++k;
+        }
+        /* cout << i * x - m << " " << k << "\n"; */
+        res = min(res, (i * x - m) + k + n - i);
+    }
+    cout << res;
 }
 
 int main() {
     fastio();
 
-    /* int t = 1; */
-    int t;
-    cin >> t;
+    int t = 1;
+    /* int t; */
+    /* cin >> t; */
 
 #ifdef DEBUG
     while (t--) {

@@ -82,6 +82,64 @@ template <typename T> T sum(const vector<T> &v) {
     return accumulate(all(v), T(0));
 }
 
+template <typename T> int bs(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l <= r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] == t) {
+            return k;
+        }
+
+        if (arr[k] < t) {
+            l = k + 1;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsl(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] >= t) {
+            r = k;
+        } else {
+            l = k + 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsr(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l + 1) / 2;
+
+        if (arr[k] <= t) {
+            l = k;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
 // Simple 1D range query segment tree inc range [a,b]
 struct SegmentTree {
     vi st;
@@ -262,7 +320,28 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+const int INF = 2e3 + 1;
+const int MAXN = 1e3 + 1;
+int memo[MAXN][MAXN];
 void solve() {
+    memset(memo, -1, sizeof(memo));
+    string a, b, c;
+    readin(a, b, c);
+    int A = a.size(), B = b.size();
+    function<int(int, int)> ans = [&](int i, int j) -> int {
+        if (i == A && j == B)
+            return 0;
+        if (memo[i][j] != -1)
+            return memo[i][j];
+        int l = INF, r = INF;
+        if (i < A)
+            l = ans(i + 1, j) + ((a[i] == c[i + j]) ? 0 : 1);
+        if (j < B)
+            r = ans(i, j + 1) + ((b[j] == c[i + j]) ? 0 : 1);
+        return memo[i][j] = min(l, r);
+    };
+    /* debug(ans(0, 0)); */
+    println(ans(0, 0));
 }
 
 int main() {

@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <cctype>
 #include <climits>
 #include <cmath>
 #include <cstdio>
@@ -80,6 +79,64 @@ template <typename T> bool in(const set<T> &s, T t) {
 
 template <typename T> T sum(const vector<T> &v) {
     return accumulate(all(v), T(0));
+}
+
+template <typename T> int bs(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l <= r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] == t) {
+            return k;
+        }
+
+        if (arr[k] < t) {
+            l = k + 1;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsl(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] >= t) {
+            r = k;
+        } else {
+            l = k + 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsr(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l + 1) / 2;
+
+        if (arr[k] <= t) {
+            l = k;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
 }
 
 // Simple 1D range query segment tree inc range [a,b]
@@ -255,22 +312,67 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-int ord(char &c) {
+int tb[26];
+
+void pra() {
+    cout << '[';
+    for (int i = 0; i < 26; i++) {
+        cout << tb[i];
+        if (i < 25)
+            cout << ", ";
+    }
+    cout << "]\n";
+}
+
+int ord(const char &c) {
     int x = int(c);
     if (!isalpha(c))
         return x - 48;
     return islower(c) ? x - 97 : x - 65;
 }
 
+bool slv(const string &s, int n, int m, int k) {
+    int l = 0, r = 0, mx;
+    bool res = false;
+    while (r < n) {
+        ++tb[ord(s[r])];
+        if (r >= m)
+            --tb[ord(s[l++])];
+        mx = 0;
+        for (int i = 0; i < 26; i++)
+            mx = max(mx, tb[i]);
+        if (m - mx <= k) {
+            res = true;
+            break;
+        }
+        ++r;
+    }
+    for (int i = 0; i < 26; i++)
+        tb[i] = 0;
+    return res;
+}
+
 void solve() {
+    int n, k;
+    string s;
+    readin(n, k, s);
+    int l = 0, r = n;
+    while (l < r) {
+        int m = l + (r - l + 1) / 2;
+        if (slv(s, n, m, k))
+            l = m;
+        else
+            r = m - 1;
+    }
+    print(l);
 }
 
 int main() {
     fastio();
 
-    /* int t = 1; */
-    int t;
-    cin >> t;
+    int t = 1;
+    /* int t; */
+    /* cin >> t; */
 
 #ifdef DEBUG
     while (t--) {

@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <cctype>
 #include <climits>
 #include <cmath>
 #include <cstdio>
@@ -56,6 +55,9 @@ typedef vector<pll> vpll;
 
 const string ln = "\n";
 const double PI = 3.14159265358979323846;
+const int MAX_N = 1e5 + 5;
+const ll MOD = 1e9 + 7;
+const ll INF = 1e9;
 const ll INFLL = LLONG_MAX;
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
@@ -82,7 +84,65 @@ template <typename T> T sum(const vector<T> &v) {
     return accumulate(all(v), T(0));
 }
 
-// Simple 1D range query segment tree inc range [a,b]
+template <typename T> int bs(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l <= r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] == t) {
+            return k;
+        }
+
+        if (arr[k] < t) {
+            l = k + 1;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsl(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] >= t) {
+            r = k;
+        } else {
+            l = k + 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsr(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l + 1) / 2;
+
+        if (arr[k] <= t) {
+            l = k;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+// Simple 1D range query segment tree
 struct SegmentTree {
     vi st;
 
@@ -255,14 +315,58 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-int ord(char &c) {
-    int x = int(c);
-    if (!isalpha(c))
-        return x - 48;
-    return islower(c) ? x - 97 : x - 65;
+bool slv(ll k, ll d, ll c, ll n, ll sm, const vll &v) {
+    if (k < n) {
+        sm = 0LL;
+        for (int i = 0; i < k + 1; i++) {
+            sm += v[i];
+        }
+    }
+    ll x = d / ++k;
+    d -= x * k;
+    c -= x * sm;
+    if (c <= 0)
+        return true;
+    for (int i = 0; i < min(d, n); i++) {
+        c -= v[i];
+        if (c <= 0)
+            return true;
+    }
+    return false;
 }
 
 void solve() {
+    const ll INFL = 2e5 + 1;
+    ll n, c, d, mx = 0LL, sm = 0LL;
+    readin(n, c, d);
+    vll v(n);
+    for (ll &x : v) {
+        cin >> x;
+        sm += x;
+        mx = max(mx, x);
+    }
+    if (mx >= c) {
+        println("Infinity");
+        return;
+    }
+    sort(all(v), greater<ll>());
+    ll l = -1, r = INFL;
+    while (l < r) {
+        ll k = l + (r - l + 1) / 2;
+        if (slv(k, d, c, n, sm, v))
+            l = k;
+        else
+            r = k - 1;
+    }
+    if (l == -1) {
+        println("Impossible");
+        return;
+    }
+    if (l == INFL) {
+        println("Infinity");
+        return;
+    }
+    println(l);
 }
 
 int main() {
