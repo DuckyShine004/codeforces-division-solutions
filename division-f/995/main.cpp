@@ -102,13 +102,14 @@ struct SegmentTree {
     vi st;
 
     SegmentTree(const vector<int> &a, int n) {
-        st.resize(4 * n, 0);
+        st.resize(4 * n);
 
         for (int i = 0; i < n; i++)
             st[n + i] = a[i];
 
         for (int i = n - 1; i >= 1; i--) {
-            st[i] = st[i << 1] + st[i << 1 | 1];
+            st[i] += st[i << 1];
+            st[i] += st[i << 1 | 1];
         }
     }
 
@@ -119,15 +120,17 @@ struct SegmentTree {
 
         while (p > 1) {
             p >>= 1;
-            st[p] = st[p << 1] + st[p << 1 | 1];
+
+            st[p] += st[p << 1];
+            st[p] += st[p << 1 | 1];
         }
     }
 
     int query(int l, int r, int n) {
-        int res = 0;
-
         l += n;
         r += n;
+
+        int res = 0;
 
         while (l <= r) {
             if ((l & 1) == 1) {
@@ -277,6 +280,74 @@ int ord(char &c) {
 }
 
 void solve() {
+    int n, m, q, x, ans = 2;
+    input(n, m, q);
+    --m;
+    cin >> x;
+    --x;
+    cout << ans << " ";
+    if (x == m) {
+        int i = 1, l = 0, r = n - 1;
+        while (i < q) {
+            cin >> x;
+            --x;
+            if (x > l && l + 1 < r) {
+                ++l;
+                ++ans;
+            }
+            if (x < r && r - 1 > l) {
+                --r;
+                ++ans;
+            }
+            ++i;
+            cout << ans << " ";
+        }
+        debug(i, n, m, q);
+    } else {
+        int i = 1, l = -1, r = -1, u = m, v = (x > m) ? m + 1 : m - 1;
+        if (u > v)
+            swap(u, v);
+        while (i < q) {
+            cin >> x;
+            --x;
+            if (l == -1) {
+                if (u <= x && x <= v) {
+                    l = 0;
+                    r = n - 1;
+                    if (l < u)
+                        ++ans;
+                    if (r > v)
+                        ++ans;
+                } else if (x < u && u > 0) {
+                    --u;
+                    ++ans;
+                } else if (x > v && v < n - 1) {
+                    ++v;
+                    ++ans;
+                }
+            } else {
+                if (x > l && l + 1 < u) {
+                    ++l;
+                    ++ans;
+                }
+                if (x < u && u - 1 > l) {
+                    --u;
+                    ++ans;
+                }
+                if (x > v && v + 1 < r) {
+                    ++v;
+                    ++ans;
+                }
+                if (x < r && r - 1 > v) {
+                    --r;
+                    ++ans;
+                }
+            }
+            ++i;
+            cout << ans << " ";
+        }
+    }
+    cout << "\n";
 }
 
 int main() {

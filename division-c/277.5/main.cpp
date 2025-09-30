@@ -102,13 +102,14 @@ struct SegmentTree {
     vi st;
 
     SegmentTree(const vector<int> &a, int n) {
-        st.resize(4 * n, 0);
+        st.resize(4 * n);
 
         for (int i = 0; i < n; i++)
             st[n + i] = a[i];
 
         for (int i = n - 1; i >= 1; i--) {
-            st[i] = st[i << 1] + st[i << 1 | 1];
+            st[i] += st[i << 1];
+            st[i] += st[i << 1 | 1];
         }
     }
 
@@ -119,15 +120,17 @@ struct SegmentTree {
 
         while (p > 1) {
             p >>= 1;
-            st[p] = st[p << 1] + st[p << 1 | 1];
+
+            st[p] += st[p << 1];
+            st[p] += st[p << 1 | 1];
         }
     }
 
     int query(int l, int r, int n) {
-        int res = 0;
-
         l += n;
         r += n;
+
+        int res = 0;
 
         while (l <= r) {
             if ((l & 1) == 1) {
@@ -277,14 +280,88 @@ int ord(char &c) {
 }
 
 void solve() {
+    int m, s, x;
+    input(m, s);
+    if (m == 1 && s == 0) {
+        cout << 0 << " " << 0;
+        return;
+    }
+    int tmp = s;
+    string ans1 = "";
+    for (int i = 0; i < m; i++) {
+        x = (9 <= tmp) ? 9 : tmp;
+        tmp -= x;
+        ans1 += char(x + 48);
+    }
+    if (ans1.length() > 1 && ans1[0] == ans1[1] && ans1[0] == '0') {
+        /* cout << -1 << " " << -1 << "\n"; */
+        cout << -1 << " " << -1;
+        return;
+    }
+    int q = m + 1, r = -1;
+    for (int i = 1; i < 10; i++) {
+        for (int j = 0; j < m; j++) {
+            if (9 * j + (m - j) * i >= s) {
+                if (j < q) {
+                    q = j;
+                    r = i;
+                }
+                break;
+            }
+        }
+        if (r != -1)
+            break;
+    }
+    if (r == -1) {
+        cout << -1 << " " << -1;
+        return;
+    }
+    string ans2(m, char(r + 48));
+    /* debug(r); */
+    int sm = r * m, ad;
+    for (int i = m - 1; i >= 0; i--) {
+        ad = min(s - sm, 9 - r);
+        if (ad <= 0)
+            break;
+        sm += ad;
+        ans2[i] = char(r + ad + 48);
+    }
+    for (int i = 0; i < m; i++) {
+        ad = min(r, sm - s);
+        if (i == 0 && ad == r)
+            continue;
+        if (ad == 0)
+            break;
+        sm -= ad;
+        ans2[i] = char(r - ad + 48);
+    }
+    int pl = 0, pr = m - 1, cl, cr;
+    while (pl < pr) {
+        if ((pl == 0 && ans2[pl] == '1') || ans2[pl] == '0') {
+            ++pl;
+            continue;
+        }
+        if (ans2[pr] == '9') {
+            --pr;
+            continue;
+        }
+        cl = ord(ans2[pl]);
+        cr = ord(ans2[pr]);
+        ad = min(cl, 9 - cr);
+        /* debug(pl, pr, cl, cr, ad, ans2); */
+        ans2[pl] = char(cl - ad + 48);
+        ans2[pr] = char(cr + ad + 48);
+    }
+    /* cout << ans2 << " " << ans1 << "\n"; */
+    cout << ans2 << " " << ans1;
 }
 
 int main() {
     fastio();
 
-    /* int t = 1; */
-    int t;
-    cin >> t;
+    int t = 1;
+    /* int t; */
+    /* cin >> t; */
 
 #ifdef DEBUG
     while (t--) {

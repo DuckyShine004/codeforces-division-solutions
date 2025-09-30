@@ -277,6 +277,39 @@ int ord(char &c) {
 }
 
 void solve() {
+    int n;
+    cin >> n;
+    vector<int> a(n, -1);
+    int x = 1;
+    for (int i = 0; i < n; i++) {
+        a[i] = x;
+        x += 2;
+        if (x > n)
+            break;
+    }
+    x = 2;
+    for (int i = 0; i < n; i++) {
+        if (a[i] != -1)
+            continue;
+        a[i] = x;
+        x += 2;
+        if (x > n)
+            break;
+    }
+    bool f = true;
+    for (int i = 1; i < n; i++) {
+        if (a[i] == i + 1) {
+            f = false;
+            break;
+        }
+    }
+    if (f) {
+        for (int x : a)
+            cout << x << " ";
+        cout << "\n";
+    } else {
+        println(-1);
+    }
 }
 
 int main() {

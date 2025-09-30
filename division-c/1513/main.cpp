@@ -276,7 +276,44 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+const ll MOD = 1e9 + 7;
+const int N = 10;
+ll dp[N];
+ll tb[N];
 void solve() {
+    string n;
+    int m;
+    input(n, m);
+
+    memset(dp, 0, sizeof(dp));
+    for (char c : n)
+        ++dp[int(c) - 48];
+
+    while (m--) {
+        for (int i = 0; i < N; i++)
+            tb[i] = 0;
+        for (int i = 0; i < N; i++) {
+            if (i < N - 1) {
+                if (dp[i] > 0) {
+                    tb[i + 1] = dp[i];
+                }
+                dp[i] = tb[i];
+            } else {
+                if (dp[N - 1] > 0) {
+                    tb[0] = dp[N - 1];
+                    tb[1] = (tb[1] + dp[N - 1]) % MOD;
+                }
+                dp[0] = tb[0];
+                dp[1] = tb[1];
+                dp[N - 1] = tb[N - 1];
+            }
+        }
+    }
+    /* debug(dp); */
+    ll res = 0;
+    for (int i = 0; i < N; i++)
+        res = (res + dp[i]) % MOD;
+    println(res);
 }
 
 int main() {

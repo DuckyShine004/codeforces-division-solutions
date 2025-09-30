@@ -276,7 +276,62 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+const int N = 2001;
+const ll MOD = 998244353;
+string s[N];
+ll dp[N][N][2];
+
 void solve() {
+    memset(dp, 0, sizeof(dp));
+
+    int n, m, d;
+    input(n, m, d);
+
+    for (int i = 0; i < n; i++)
+        input(s[i]);
+
+    for (int j = 0; j < m; j++) {
+        if (s[n - 1][j] == 'X')
+            dp[n - 1][j][0] = dp[n - 1][j][1] = 1;
+    }
+    for (int j = 0; j < m; j++) {
+        if (s[n - 1][j] == 'X') {
+            int l = max(0, j - d);
+            int r = min(m - 1, j + d);
+            for (int x = l; x <= r; x++)
+                dp[n - 1][j][0] += dp[n - 1][x][1];
+            dp[n - 1][j][0] -= dp[n - 1][j][1];
+        }
+    }
+    for (int i = n - 2; i >= 0; i--) {
+        for (int j = 0; j < m; j++) {
+            if (s[i][j] == 'X') {
+                int l = max(0, j - d + 1);
+                int r = min(m - 1, j + d - 1);
+                for (int x = l; x <= r; x++)
+                    dp[i][j][1] = (dp[i][j][1] + dp[i + 1][x][0]) % MOD;
+            }
+        }
+        // Calculate k+1 holds on same level
+        for (int j = 0; j < m; j++) {
+            if (s[i][j] == 'X') {
+                int l = max(0, j - d + 1);
+                int r = min(m - 1, j + d - 1);
+                for (int x = l; x <= r; x++)
+                    dp[i][j][0] = (dp[i][j][0] + dp[i + 1][x][0]) % MOD;
+                l = max(0, j - d);
+                r = min(m - 1, j + d);
+                for (int x = l; x <= r; x++)
+                    dp[i][j][0] = (dp[i][j][0] + dp[i][x][1]) % MOD;
+                dp[i][j][0] -= dp[i][j][1];
+            }
+        }
+    }
+
+    ll res = 0;
+    for (int j = 0; j < m; j++)
+        res = (res + dp[0][j][0]) % MOD;
+    println(res);
 }
 
 int main() {

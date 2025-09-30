@@ -276,7 +276,25 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+const int N = 2e5 + 1;
+ll dp[N][2];
+ll a[N];
 void solve() {
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        dp[i][0] = dp[i][1] = 0;
+    }
+    dp[0][0] = a[0];
+    dp[0][1] = abs(a[0]);
+    for (int i = 1; i < n; i++) {
+        dp[i][0] = min(dp[i - 1][0], dp[i - 1][1]) + a[i];
+        dp[i][1] = max(abs(dp[i][0]), abs(dp[i - 1][1] + a[i]));
+    }
+    /* for (int i = 0; i < n; i++) */
+    /*     debug(dp[i]); */
+    println(max(dp[n - 1][0], dp[n - 1][1]));
 }
 
 int main() {

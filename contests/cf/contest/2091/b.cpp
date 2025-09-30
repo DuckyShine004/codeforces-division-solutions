@@ -277,6 +277,24 @@ int ord(char &c) {
 }
 
 void solve() {
+    int n, x;
+    input(n, x);
+    vector<int> a(n);
+    read(a);
+
+    sort(all(a), greater<int>());
+    int i = 0, res = 0;
+    while (i < n) {
+        int j = i, c = 0;
+        while (j < n && c < x) {
+            c = a[j] * (j - i + 1);
+            ++j;
+        }
+        if (c >= x)
+            ++res;
+        i = j;
+    }
+    println(res);
 }
 
 int main() {

@@ -276,11 +276,23 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+const int N = 2e5 + 1;
+int dp[N];
+int p[N];
 void solve() {
+    int l, r;
+    input(l, r);
+
+    println(p[r] - p[l - 1] + dp[l]);
 }
 
 int main() {
     fastio();
+    p[0] = 0;
+    for (int i = 1; i < N; i++) {
+        dp[i] = (int)(log(i) / log(3 - 1e-9)) + 1;
+        p[i] = p[i - 1] + dp[i];
+    }
 
     /* int t = 1; */
     int t;

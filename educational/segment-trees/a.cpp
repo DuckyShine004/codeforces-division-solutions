@@ -99,9 +99,9 @@ template <class S, class T = null_type, class cmp = less<S>> using oset = tree<S
 
 // Simple 1D range query segment tree inc range [a,b]
 struct SegmentTree {
-    vi st;
+    vll st;
 
-    SegmentTree(const vector<int> &a, int n) {
+    SegmentTree(const vll &a, int n) {
         st.resize(4 * n, 0);
 
         for (int i = 0; i < n; i++)
@@ -112,7 +112,7 @@ struct SegmentTree {
         }
     }
 
-    void update(int p, int v, int n) {
+    void update(int p, ll v, int n) {
         p += n;
 
         st[p] = v;
@@ -123,11 +123,11 @@ struct SegmentTree {
         }
     }
 
-    int query(int l, int r, int n) {
-        int res = 0;
-
+    ll query(int l, int r, int n) {
         l += n;
         r += n;
+
+        ll res = 0;
 
         while (l <= r) {
             if ((l & 1) == 1) {
@@ -277,14 +277,27 @@ int ord(char &c) {
 }
 
 void solve() {
+    int n, m, u;
+    ll v, w;
+    input(n, m);
+    vll a(n);
+    read(a);
+    SegmentTree st(a, n);
+    while (m--) {
+        input(u, v, w);
+        if (u == 1)
+            st.update(v, w, n);
+        else
+            println(st.query(v, w - 1, n));
+    }
 }
 
 int main() {
     fastio();
 
-    /* int t = 1; */
-    int t;
-    cin >> t;
+    int t = 1;
+    /* int t; */
+    /* cin >> t; */
 
 #ifdef DEBUG
     while (t--) {

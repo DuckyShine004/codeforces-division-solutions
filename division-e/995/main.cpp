@@ -64,12 +64,8 @@ const ll INFLL = LLONG_MAX;
 const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
 
-template <typename T> void read(T &value) {
-    cin >> value;
-}
-
 template <typename T> void read(vector<T> &arr) {
-    for (auto &v : arr) {
+    for (T &v : arr) {
         cin >> v;
     }
 }
@@ -79,7 +75,7 @@ template <typename S, typename T> void read(pair<S, T> &p) {
 }
 
 template <typename... Args> void input(Args &...args) {
-    (read(args), ...);
+    ((cin >> args), ...);
 }
 
 template <typename T> T gcd(T a, T b) {
@@ -102,13 +98,14 @@ struct SegmentTree {
     vi st;
 
     SegmentTree(const vector<int> &a, int n) {
-        st.resize(4 * n, 0);
+        st.resize(4 * n);
 
         for (int i = 0; i < n; i++)
             st[n + i] = a[i];
 
         for (int i = n - 1; i >= 1; i--) {
-            st[i] = st[i << 1] + st[i << 1 | 1];
+            st[i] += st[i << 1];
+            st[i] += st[i << 1 | 1];
         }
     }
 
@@ -119,15 +116,17 @@ struct SegmentTree {
 
         while (p > 1) {
             p >>= 1;
-            st[p] = st[p << 1] + st[p << 1 | 1];
+
+            st[p] += st[p << 1];
+            st[p] += st[p << 1 | 1];
         }
     }
 
     int query(int l, int r, int n) {
-        int res = 0;
-
         l += n;
         r += n;
+
+        int res = 0;
 
         while (l <= r) {
             if ((l & 1) == 1) {
@@ -276,7 +275,49 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+int bs(const vll &v, ll n, ll t) {
+    int l = 0, r = n - 1, m;
+    while (l < r) {
+        m = l + (r - l) / 2;
+        if (v[m] >= t)
+            r = m;
+        else
+            l = m + 1;
+    }
+    return l;
+}
+
 void solve() {
+    int n;
+    ll k;
+    input(n, k);
+    vll a(n), b(n);
+    read(a);
+    read(b);
+    set<ll> s;
+    fors(i, 0, n) {
+        s.insert(a[i]);
+        s.insert(b[i]);
+    }
+    vll v(all(s));
+    ll res = 0, du, dv, dl, dr;
+    sort(all(a));
+    sort(all(b));
+    /* debug(a, b); */
+    for (ll x : v) {
+        du = bs(a, n, x);
+        dv = bs(b, n, x);
+        if (x > a[du])
+            ++du;
+        if (x < a[dv])
+            dv = du;
+        dl = du - dv;
+        dr = n - du;
+        if (dl <= k)
+            res = max(res, x * (dl + dr));
+        /* debug(x, du, dv, dl, dr, x * (dl + dr)); */
+    }
+    println(res);
 }
 
 int main() {

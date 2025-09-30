@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <numeric>
 #include <queue>
 #include <set>
 #include <stack>
@@ -276,7 +277,46 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+/* const int N = 1e10 + 1; */
+/* bool p[N]; */
+
+/* void setup() { */
+/*     memset(p, true, sizeof(p)); */
+/*     p[0] = p[1] = false; */
+
+/*     for (int i = 2; i <= N; i++) { */
+/*         if (p[i] && (ll)i * i <= N) { */
+/*             for (int j = i * i; j <= N; j += i) { */
+/*                 p[j] = false; */
+/*             } */
+/*         } */
+/*     } */
+/* } */
+bool p(int n) {
+    if (n < 2)
+        return false;
+    if (n == 2)
+        return true;
+    int k = ceil(sqrt(n));
+    for (int i = 3; i <= k; i++) {
+        if (n % k == 0)
+            return false;
+    }
+    return true;
+}
+
 void solve() {
+    int n, res = 0;
+    cin >> n;
+
+    for (int a = 1; a < n; a++) {
+        for (int b = a + 1; b <= n; b++) {
+            int F = lcm(a, b) / gcd(a, b);
+            if (p(F))
+                ++res;
+        }
+    }
+    println(res);
 }
 
 int main() {

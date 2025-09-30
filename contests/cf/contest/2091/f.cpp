@@ -276,7 +276,81 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+const int N = 2001;
+const ll MOD = 998244353;
+string s[N];
+ll p[N][N][2];
+ll dp[N][N][2];
+
+ll sm(int i, int l, int r, int k) {
+    ll res = p[i][r][k];
+    if (l > 0)
+        res -= p[i][l - 1][k];
+    return res;
+}
+
 void solve() {
+    int n, m, d;
+    input(n, m, d);
+
+    for (int i = 0; i < n; i++)
+        input(s[i]);
+
+    for (int j = 0; j < m; j++) {
+        dp[n - 1][j][0] = dp[n - 1][j][1] = 0;
+        if (s[n - 1][j] == 'X')
+            dp[n - 1][j][0] = dp[n - 1][j][1] = 1;
+        p[n - 1][j][1] = dp[n - 1][j][1];
+        if (j > 0)
+            p[n - 1][j][1] += p[n - 1][j - 1][1];
+    }
+    for (int j = 0; j < m; j++) {
+        ll ans = dp[n - 1][j][0];
+        if (s[n - 1][j] == 'X') {
+            int l = max(0, j - d);
+            int r = min(m - 1, j + d);
+            ans += sm(n - 1, l, r, 1);
+            ans -= dp[n - 1][j][1];
+        }
+        p[n - 1][j][0] = dp[n - 1][j][0] = (ans % MOD);
+        if (j > 0)
+            p[n - 1][j][0] += p[n - 1][j - 1][0];
+    }
+    for (int i = n - 2; i >= 0; i--) {
+        for (int j = 0; j < m; j++) {
+            ll ans = 0;
+            if (s[i][j] == 'X') {
+                int l = max(0, j - d + 1);
+                int r = min(m - 1, j + d - 1);
+                ans += sm(i + 1, l, r, 0);
+            }
+            p[i][j][1] = dp[i][j][1] = (ans % MOD);
+            if (j > 0)
+                p[i][j][1] += p[i][j - 1][1];
+        }
+        for (int j = 0; j < m; j++) {
+            ll ans = 0;
+            if (s[i][j] == 'X') {
+                int l = max(0, j - d + 1);
+                int r = min(m - 1, j + d - 1);
+                ans += sm(i + 1, l, r, 0);
+
+                l = max(0, j - d);
+                r = min(m - 1, j + d);
+                ans += sm(i, l, r, 1);
+                ans -= dp[i][j][1];
+            }
+            p[i][j][0] = dp[i][j][0] = (ans % MOD);
+            if (j > 0)
+                p[i][j][0] += p[i][j - 1][0];
+        }
+    }
+
+    ll res = 0;
+    for (int j = 0; j < m; j++)
+        if (s[0][j] == 'X')
+            res = (res + dp[0][j][0]) % MOD;
+    println(res);
 }
 
 int main() {

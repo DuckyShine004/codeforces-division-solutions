@@ -277,6 +277,31 @@ int ord(char &c) {
 }
 
 void solve() {
+    int n, res = 0;
+    cin >> n;
+    vector<int> a(n);
+    read(a);
+
+    map<int, int> d = {{0, 3}, {1, 1}, {2, 2}, {3, 1}, {5, 1}};
+    int v[10];
+    memset(v, 0, sizeof(v));
+
+    for (int i = 0; i < n; i++) {
+        if (d.find(a[i]) != d.end())
+            --d[a[i]];
+        bool f = true;
+        for (auto &p : d) {
+            if (p.second > 0) {
+                f = false;
+                break;
+            }
+        }
+        if (f) {
+            res = i + 1;
+            break;
+        }
+    }
+    println(res);
 }
 
 int main() {

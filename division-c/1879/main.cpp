@@ -276,12 +276,37 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+const ll MOD = 998244353;
+const int N = 2e5 + 1;
+ll p[N];
+
 void solve() {
+    string s;
+    cin >> s;
+    int i = 0, n = s.length();
+    ll res = 1, cnt = 0;
+    while (i < n) {
+        int j = i + 1, c = 0;
+        while (j < n && s[j] == s[i]) {
+            ++c;
+            ++j;
+        }
+        if (c > 0) {
+            cnt += c;
+            res = (res * (c + 1)) % MOD;
+        }
+        i = j;
+    }
+    res = (res * p[cnt]) % MOD;
+    cout << cnt << " " << res << "\n";
 }
 
 int main() {
     fastio();
 
+    p[0] = p[1] = 1;
+    for (int i = 2; i < N; i++)
+        p[i] = i * p[i - 1] % MOD;
     /* int t = 1; */
     int t;
     cin >> t;

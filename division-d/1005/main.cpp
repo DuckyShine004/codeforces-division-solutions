@@ -276,15 +276,45 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+const int N = 2e5 + 1;
+int p[N];
+int memo[N];
+
 void solve() {
+    string s;
+    cin >> s;
+    int n = s.length();
+
+    for (int i = 0; i < n; i++) {
+        int x = (int)s[i] - 48;
+        p[i] = x;
+        if (i > 0)
+            p[i] += p[i - 1];
+    }
+
+    int res = 0, sm = 0;
+    for (char &c : s) {
+        int d = (int)c - 48;
+        if (d == 0) {
+            ++res;
+            sm = 0;
+        } else {
+            sm = (sm + d) % 3;
+            if (sm == 0) {
+                ++res;
+                sm = 0;
+            }
+        }
+    }
+    println(res);
 }
 
 int main() {
     fastio();
 
-    /* int t = 1; */
-    int t;
-    cin >> t;
+    int t = 1;
+    /* int t; */
+    /* cin >> t; */
 
 #ifdef DEBUG
     while (t--) {

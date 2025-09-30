@@ -276,7 +276,15 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+bool cmp(string s, string t) {
+    int n = s.length();
+    int k = n >> 1;
+    return true;
+}
+
 void solve() {
+    string s;
+    cin >> s;
 }
 
 int main() {

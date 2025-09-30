@@ -276,11 +276,44 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+const int N = 2e5 + 1;
+const ll MOD = 998244353;
+ll a[N];
+ll p[N];
 void solve() {
+    int n;
+    cin >> n;
+    ll sum = 0, mn = 0, res = 0;
+    // At min, option 2 maximises
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        sum += a[i];
+        mn = min(mn, sum);
+    }
+    if (mn == 0) {
+        println(p[n]);
+        return;
+    }
+    int l = 0;
+    sum = 0;
+    // Since we flip at min, we count how many way up to min such that we can choose both options
+    for (int i = 0; i < n; i++) {
+        sum += a[i];
+        if (sum >= 0)
+            ++l;
+        if (sum == mn)
+            res = (res + p[n - i - 1 + l]) % MOD;
+    }
+    println(res);
 }
 
 int main() {
     fastio();
+
+    p[0] = 1;
+    for (int i = 1; i < N; i++) {
+        p[i] = 2 * p[i - 1] % MOD;
+    }
 
     /* int t = 1; */
     int t;

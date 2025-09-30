@@ -276,15 +276,55 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+struct ST {
+    vector<int> st;
+    ST(vector<int> &a) {
+        int n = a.size();
+        st.resize(4 * n);
+        build(a, 1, 0, n - 1);
+    }
+    void build(vector<int> &a, int v, int tl, int tr) {
+        // Leaf
+        if (tl == tr) {
+            st[v] = a[tl];
+        } else {
+            int tm = (tl + tr) >> 1;
+            build(a, 2 * v, tl, tm);
+            build(a, 2 * v + 1, tm + 1, tr);
+            st[v] = st[2 * v] + st[2 * v + 1];
+        }
+    }
+    // 1,0,n-1
+    int query(int v, int tl, int tr, int l, int r) {
+        if (l > r) {
+            return 0;
+        }
+        if (l == tl && r == tr) {
+            return st[v];
+        }
+        int tm = (tl + tr) >> 1;
+        return query(2 * v, tl, tm, l, min(r, tm)) + query(2 * v + 1, tm + 1, tr, max(l, tm + 1), r);
+    }
+};
+
 void solve() {
+    int n;
+    cin >> n;
+    vector<int> a(n);
+    println(n);
+    for (int &x : a) {
+        cin >> x;
+    }
+    ST st(a);
+    println(st.query(1, 0, n - 1, 0, n - 1));
 }
 
 int main() {
     fastio();
 
-    /* int t = 1; */
-    int t;
-    cin >> t;
+    int t = 1;
+    // int t;
+    // cin >> t;
 
 #ifdef DEBUG
     while (t--) {

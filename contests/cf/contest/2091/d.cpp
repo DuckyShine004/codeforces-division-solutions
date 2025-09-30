@@ -276,7 +276,27 @@ int ord(char &c) {
     return islower(c) ? x - 97 : x - 65;
 }
 
+ll max(ll a, ll b) {
+    return (a > b) ? a : b;
+}
 void solve() {
+    // n=rows
+    ll n, m, k;
+    input(n, m, k);
+
+    ll l = 1, r = m;
+    while (l < r) {
+        ll p = l + ((r - l) >> 1);
+        ll q = (m + 1) / (p + 1);
+        ll t = max(0LL, ((m + 1) % (p + 1)) - 1);
+        ll x = n * (p * q + t);
+        if (x >= k) {
+            r = p;
+        } else {
+            l = p + 1;
+        }
+    }
+    println(l);
 }
 
 int main() {

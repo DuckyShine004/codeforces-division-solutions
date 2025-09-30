@@ -99,43 +99,78 @@ template <class S, class T = null_type, class cmp = less<S>> using oset = tree<S
 
 // Simple 1D range query segment tree inc range [a,b]
 struct SegmentTree {
-    vi st;
+    vi st, cnt;
 
     SegmentTree(const vector<int> &a, int n) {
-        st.resize(4 * n, 0);
+        int l, r;
 
-        for (int i = 0; i < n; i++)
+        st.resize(4 * n, 0);
+        cnt.resize(4 * n, 0);
+
+        for (int i = 0; i < n; i++) {
             st[n + i] = a[i];
+            cnt[n + i] = 1;
+        }
 
         for (int i = n - 1; i >= 1; i--) {
-            st[i] = st[i << 1] + st[i << 1 | 1];
+            l = i << 1;
+            r = i << 1 | 1;
+            if (st[l] == st[r])
+                cnt[i] = cnt[l] + cnt[r];
+            else if (st[l] < st[r])
+                cnt[i] = cnt[l];
+            else
+                cnt[i] = cnt[r];
+            st[i] = min(st[l], st[r]);
         }
     }
 
     void update(int p, int v, int n) {
-        p += n;
+        int l, r;
 
+        p += n;
         st[p] = v;
 
         while (p > 1) {
             p >>= 1;
-            st[p] = st[p << 1] + st[p << 1 | 1];
+            l = p << 1;
+            r = p << 1 | 1;
+            if (st[l] == st[r])
+                cnt[p] = cnt[l] + cnt[r];
+            else if (st[l] < st[r])
+                cnt[p] = cnt[l];
+            else
+                cnt[p] = cnt[r];
+            st[p] = min(st[l], st[r]);
         }
     }
 
-    int query(int l, int r, int n) {
-        int res = 0;
+    pair<int, int> query(int l, int r, int n) {
+        pair<int, int> res = {1e9 + 1, 0};
 
         l += n;
         r += n;
 
+        // Reset count if children are smaller, otherwise, child is the minimum, so we add to count
         while (l <= r) {
             if ((l & 1) == 1) {
-                res += st[l++];
+                if (st[l] < res.f) {
+                    res.s = cnt[l];
+                    res.f = st[l];
+                } else if (st[l] == res.f) {
+                    res.s += cnt[l];
+                }
+                ++l;
             }
 
             if ((r & 1) == 0) {
-                res += st[r--];
+                if (st[r] < res.f) {
+                    res.s = cnt[r];
+                    res.f = st[r];
+                } else if (st[r] == res.f) {
+                    res.s += cnt[r];
+                }
+                --r;
             }
 
             l >>= 1;
@@ -277,14 +312,28 @@ int ord(char &c) {
 }
 
 void solve() {
+    int n, m, u, v, w;
+    input(n, m);
+    vi a(n);
+    read(a);
+    SegmentTree st(a, n);
+    while (m--) {
+        input(u, v, w);
+        if (u == 1) {
+            st.update(v, w, n);
+        } else {
+            pair<int, int> p = st.query(v, w - 1, n);
+            cout << p.f << " " << p.s << "\n";
+        }
+    }
 }
 
 int main() {
     fastio();
 
-    /* int t = 1; */
-    int t;
-    cin >> t;
+    int t = 1;
+    /* int t; */
+    /* cin >> t; */
 
 #ifdef DEBUG
     while (t--) {

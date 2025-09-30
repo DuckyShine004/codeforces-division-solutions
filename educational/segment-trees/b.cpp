@@ -108,7 +108,7 @@ struct SegmentTree {
             st[n + i] = a[i];
 
         for (int i = n - 1; i >= 1; i--) {
-            st[i] = st[i << 1] + st[i << 1 | 1];
+            st[i] = min(st[i << 1], st[i << 1 | 1]);
         }
     }
 
@@ -119,23 +119,23 @@ struct SegmentTree {
 
         while (p > 1) {
             p >>= 1;
-            st[p] = st[p << 1] + st[p << 1 | 1];
+            st[p] = min(st[p << 1], st[p << 1 | 1]);
         }
     }
 
     int query(int l, int r, int n) {
-        int res = 0;
-
         l += n;
         r += n;
 
+        int res = 1e9 + 1;
+
         while (l <= r) {
             if ((l & 1) == 1) {
-                res += st[l++];
+                res = min(res, st[l++]);
             }
 
             if ((r & 1) == 0) {
-                res += st[r--];
+                res = min(res, st[r--]);
             }
 
             l >>= 1;
@@ -277,14 +277,26 @@ int ord(char &c) {
 }
 
 void solve() {
+    int n, m, u, v, w;
+    input(n, m);
+    vi a(n);
+    read(a);
+    SegmentTree st(a, n);
+    while (m--) {
+        input(u, v, w);
+        if (u == 1)
+            st.update(v, w, n);
+        else
+            println(st.query(v, w - 1, n));
+    }
 }
 
 int main() {
     fastio();
 
-    /* int t = 1; */
-    int t;
-    cin >> t;
+    int t = 1;
+    /* int t; */
+    /* cin >> t; */
 
 #ifdef DEBUG
     while (t--) {
