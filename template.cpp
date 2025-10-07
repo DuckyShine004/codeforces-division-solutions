@@ -94,55 +94,58 @@ template <typename T> T sum(const vector<T> &v) {
     return accumulate(all(v), T(0));
 }
 
-template <class S, class T = null_type, class chash = hash<S>> using hset = gp_hash_table<S, T, chash>;
-template <class S, class T = null_type, class cmp = less<S>> using oset = tree<S, T, cmp, rb_tree_tag, tree_order_statistics_node_update>;
+template <class S, class T = null_type, class chash = hash<S>> using hash_set = gp_hash_table<S, T, chash>;
+template <class S, class T = null_type, class cmp = less<S>> using ordered_set = tree<S, T, cmp, rb_tree_tag, tree_order_statistics_node_update>;
 
 // Simple 1D range query segment tree inc range [a,b]
 struct SegmentTree {
-    vi st;
+    vi t;
+    int n;
 
     SegmentTree(const vector<int> &a, int n) {
-        st.resize(4 * n, 0);
+        t.resize(4 * n);
+        this->n = n;
+    }
 
-        for (int i = 0; i < n; i++)
-            st[n + i] = a[i];
-
-        for (int i = n - 1; i >= 1; i--) {
-            st[i] = st[i << 1] + st[i << 1 | 1];
+    void build(vi &a, int v, int tl, int tr) {
+        if (tl == tr) {
+            t[v] = a[tl];
+        } else {
+            int tm = (tl + tr) >> 1;
+            build(a, v << 1, tl, tm);
+            build(a, v << 1 | 1, tm + 1, tr);
+            t[v] = t[v << 1] + t[v << 1 | 1];
         }
     }
 
-    void update(int p, int v, int n) {
-        p += n;
-
-        st[p] = v;
-
-        while (p > 1) {
-            p >>= 1;
-            st[p] = st[p << 1] + st[p << 1 | 1];
-        }
+    int query(int l, int r) {
+        return Query(0, 0, n - 1, l, r);
     }
 
-    int query(int l, int r, int n) {
-        int res = 0;
+    int Query(int v, int tl, int tr, int l, int r) {
+        if (l > r)
+            return 0;
+        if (l == tl && r == tr)
+            return t[v];
+        int tm = (tl + tr) >> 1;
+        return Query(v << 1, tl, tm, l, min(r, tm)) + Query(v << 1 | 1, tm + 1, tr, max(l, tm + 1), r);
+    }
 
-        l += n;
-        r += n;
+    void update(int pos, int val) {
+        Update(0, 0, n - 1, pos, val);
+    }
 
-        while (l <= r) {
-            if ((l & 1) == 1) {
-                res += st[l++];
-            }
-
-            if ((r & 1) == 0) {
-                res += st[r--];
-            }
-
-            l >>= 1;
-            r >>= 1;
+    void Update(int v, int tl, int tr, int pos, int val) {
+        if (tl == tr) {
+            t[v] = val;
+        } else {
+            int tm = (tl + tr) >> 1;
+            if (pos <= tm)
+                Update(v << 1, tl, tm, pos, val);
+            else
+                Update(v << 1 | 1, tm + 1, tr, pos, val);
+            t[v] = t[v << 1] + t[v << 1 | 1];
         }
-
-        return res;
     }
 };
 
@@ -265,15 +268,6 @@ inline vec3 cross(const vec3 &a, const vec3 &b) {
 
 inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
-}
-
-int ord(char &c) {
-    int x = int(c);
-
-    if (!isalpha(c))
-        return x - 48;
-
-    return islower(c) ? x - 97 : x - 65;
 }
 
 void solve() {
